@@ -167,11 +167,11 @@ res.instantiate();
     * cmake & scons examples
 * examples using scons and cmake
 
-## Overriding/Replacing Godot Built-in Functionality
+# Overriding/Replacing Godot Built-in Functionality
 * Haven't tried this out myself, and don't know if it's possible to do yet (or even intended), especially leveraging GDExtension.
 * Example might be how to approach replacing godot physics/rendering with external native physics/rendering libraries.
 `TODO does this make sense in Godot docs??`
 
-## Code Examples
+# Code Examples
 
 `TODO worth including example snippets of code that covers everything above in a separate section like this? or keep stuff like that in-line with the above sections?`
