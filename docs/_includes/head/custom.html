@@ -405,6 +405,29 @@
       if (text && (text === 'nullptr' || text === 'constexpr' || text === 'noexcept')) {
         elem.style.color = '#DCB4B4'; // Pink like keywords
       }
+      
+      // Check if it looks like a class name (PascalCase or ends with _t)
+      if (text && (/^[A-Z][a-zA-Z0-9_]*$/.test(text) || text.endsWith('_t'))) {
+        // But not if it's an all-caps macro
+        if (!/^[A-Z_][A-Z0-9_]*$/.test(text)) {
+          elem.style.color = '#99B7D7'; // Blue for class names
+        }
+      }
+      
+      // Common C++ standard library classes
+      if (text && (text === 'string' || text === 'vector' || text === 'map' || 
+                   text === 'set' || text === 'list' || text === 'deque' ||
+                   text === 'pair' || text === 'tuple' || text === 'optional' ||
+                   text === 'variant' || text === 'any' || text === 'function')) {
+        elem.style.color = '#99B7D7'; // Blue for types
+      }
+    });
+    
+    // Fix :: operator that Rouge might tag as something else  
+    document.querySelectorAll('.highlight .p').forEach(function(elem) {
+      if (elem.textContent === '::') {
+        elem.style.color = '#DCB4B4'; // Pink like operators
+      }
     });
   });
 </script>

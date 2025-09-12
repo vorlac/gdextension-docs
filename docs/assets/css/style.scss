@@ -180,16 +180,18 @@ pre code {
 .highlight {
   background-color: #161b22 !important; /* Darker background like GitHub */
   color: #C1C4CA !important;
+  border: 1px solid #30363d !important; /* Border on outer container */
   border-radius: 8px;
-  padding: 1em;
+  padding: 0; /* Remove padding to push border to edge */
 }
 
 .highlight pre {
   background-color: #161b22 !important; /* Darker background for better contrast */
-  border: 1px solid #30363d !important; /* Slightly lighter border */
+  border: none !important; /* Remove inner border */
   color: #C1C4CA !important;
   margin: 0;
-  padding: 0;
+  padding: 1em; /* Move padding here */
+  border-radius: 8px; /* Match parent radius */
 }
 
 /* OneDark Muted Colors for Rouge */
@@ -271,6 +273,11 @@ pre code {
 /* Operators and special tokens */
 .highlight .ow { color: #DCB4B4 } /* Operator.Word */
 
+/* Fix double colon operator to be operator color, not blue */
+.highlight .o { 
+  color: #DCB4B4 !important; /* All operators including :: */
+}
+
 /* Override for specific C++ patterns */
 /* Rouge sometimes misclassifies these, so we override */
 .highlight .n { 
@@ -291,6 +298,11 @@ pre code {
 .highlight .nn { color: #99B7D7 !important } /* Namespace names - blue */
 .highlight .kt { color: #99B7D7 !important } /* Keyword.Type - blue for types */
 
+/* Force class names to be blue when used (not just declared) */
+.highlight .n {
+  &.nc, &.nn { color: #99B7D7 !important; }
+}
+
 /* Built-in functions that look like functions */
 .highlight .nb { color: #B6C5AB !important } /* Name.Builtin - green like functions */
 
@@ -307,8 +319,9 @@ pre code {
   background: none !important;
 }
 
-/* Operators should be pink */
+/* Operators should be pink including :: */
 .highlight .o { color: #DCB4B4 !important }
+.highlight .p::before { content: ''; } /* Ensure :: is treated as operator */
 
 /* Try to catch macros that Rouge misses */
 .highlight .n {
