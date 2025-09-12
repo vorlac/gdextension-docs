@@ -1,15 +1,5 @@
 # Generated Code Patterns Internal Documentation
 
-## Table of Contents
-1. [Overview](#overview)
-2. [Engine Class Generation](#engine-class-generation)
-3. [Method Call Patterns](#method-call-patterns)
-4. [Virtual Method Binding](#virtual-method-binding)
-5. [Marshalling Patterns](#marshalling-patterns)
-6. [Singleton Patterns](#singleton-patterns)
-7. [Special Case Patterns](#special-case-patterns)
-8. [Performance Optimizations](#performance-optimizations)
-
 ## Overview
 
 The binding generator produces highly optimized C++ code patterns that bridge godot-cpp with the engine's binary interface. Generated code follows strict patterns to ensure ABI stability, minimize overhead, and provide type safety.

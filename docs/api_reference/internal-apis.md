@@ -1,15 +1,5 @@
 # Internal APIs Reference
 
-## Table of Contents
-1. [GDExtension Interface Functions](#gdextension-interface-functions)
-2. [Internal Namespace APIs](#internal-namespace-apis)
-3. [Memory Management APIs](#memory-management-apis)
-4. [Type System APIs](#type-system-apis)
-5. [Method Binding APIs](#method-binding-apis)
-6. [Object Management APIs](#object-management-apis)
-7. [String and Name APIs](#string-and-name-apis)
-8. [Variant APIs](#variant-apis)
-
 ## Overview
 
 This reference documents the 160+ internal API functions that form the bridge between godot-cpp and the Godot engine. These functions handle all cross-binary communication, memory management, and type system operations.

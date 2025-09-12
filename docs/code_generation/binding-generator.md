@@ -1,20 +1,5 @@
 # Binding Generator
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Extension API JSON Schema](#extension-api-json-schema)
-3. [Code Generation Pipeline](#code-generation-pipeline)
-4. [Template Generation Patterns](#template-generation-patterns)
-5. [Special Case Handling](#special-case-handling)
-6. [Build Profile System](#build-profile-system)
-7. [Type System Mapping](#type-system-mapping)
-8. [Performance Optimizations](#performance-optimizations)
-9. [Virtual Method Generation](#virtual-method-generation)
-10. [Documentation Generation](#documentation-generation)
-11. [Error Handling](#error-handling)
-12. [Implementation Examples](#implementation-examples)
-
 ## Overview
 
 The binding generator is a sophisticated Python-based code generation system that transforms Godot's API definition into type-safe C++ bindings. It processes a massive JSON API specification (337,509+ lines) and generates optimized C++ code with complete type information, method bindings, and proper memory layouts.

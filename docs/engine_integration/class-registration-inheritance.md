@@ -1,17 +1,5 @@
 # Class Registration and Inheritance Patterns
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Class Registration Types](#class-registration-types)
-3. [Inheritance Behavior](#inheritance-behavior)
-4. [Registration Functions](#registration-functions)
-5. [Virtual Classes](#virtual-classes)
-6. [Abstract Classes](#abstract-classes)
-7. [Runtime Type Behavior](#runtime-type-behavior)
-8. [Common Patterns](#common-patterns)
-9. [Troubleshooting](#troubleshooting)
-
 ## Overview
 
 **Understanding how GDExtension classes register and inherit:** Class registration in godot-cpp determines how your C++ classes integrate with Godot's object system. Different registration methods create different behaviors for instantiation, inheritance, editor visibility, and runtime type checking. Choosing the right registration type is crucial for proper integration with both the engine and GDScript.
@@ -35,7 +23,8 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart TB
     subgraph REGISTRATION["Registration Types"]

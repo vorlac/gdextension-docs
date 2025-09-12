@@ -1,18 +1,5 @@
 # Engine Singleton Interactions
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Singleton Architecture](#singleton-architecture)
-3. [Core Singletons](#core-singletons)
-4. [Rendering Singletons](#rendering-singletons)
-5. [Physics Singletons](#physics-singletons)
-6. [Audio and Input](#audio-and-input)
-7. [Resource Management](#resource-management)
-8. [Editor Singletons](#editor-singletons)
-9. [Custom Singletons](#custom-singletons)
-10. [Performance Considerations](#performance-considerations)
-
 ## Overview
 
 **What are singletons?** Singletons are Godot's "global services" - single instances of important engine systems that you can access from anywhere in your code. Think of them like public utilities: there's one Input system that handles all input, one RenderingServer that manages all graphics, one AudioServer for all sound, etc.
@@ -58,14 +45,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart LR
     subgraph ENGINE["Godot Engine Core"]

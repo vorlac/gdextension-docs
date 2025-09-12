@@ -1,16 +1,5 @@
 # Platform-Specific Implementation Internal Documentation
 
-## Table of Contents
-1. [Overview](#overview)
-2. [Windows Platform](#windows-platform)
-3. [Linux Platform](#linux-platform)
-4. [macOS Platform](#macos-platform)
-5. [Android Platform](#android-platform)
-6. [iOS Platform](#ios-platform)
-7. [Web Platform](#web-platform)
-8. [Common Compiler Flags](#common-compiler-flags)
-9. [Cross-Compilation](#cross-compilation)
-
 ## Overview
 
 godot-cpp implements platform-specific build configurations through modular Python scripts in the `tools/` directory. Each platform has unique requirements for compilers, linkers, SDKs, and runtime libraries.

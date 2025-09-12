@@ -1,17 +1,5 @@
 # Notification System
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Notification Architecture](#notification-architecture)
-3. [Notification Types](#notification-types)
-4. [Notification Propagation](#notification-propagation)
-5. [Handling Notifications](#handling-notifications)
-6. [Custom Notifications](#custom-notifications)
-7. [Notification Ordering](#notification-ordering)
-8. [Common Patterns](#common-patterns)
-9. [Performance Considerations](#performance-considerations)
-
 ## Overview
 
 **What are notifications?** Notifications are Godot's way of telling your objects when important things happen. Think of them as automatic messages sent by the engine - "you've been added to the scene tree," "it's time to process this frame," "your transform changed," etc. They're different from signals because they're sent automatically by the engine, not by your code.
@@ -39,7 +27,8 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
         flowchart:
             curve: 'basis'
 ---

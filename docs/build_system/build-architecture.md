@@ -1,15 +1,5 @@
 # Build System Architecture Internal Documentation
 
-## Table of Contents
-1. [Overview](#overview)
-2. [SCons Build System](#scons-build-system)
-3. [Platform Detection & Configuration](#platform-detection--configuration)
-4. [Compiler Configuration](#compiler-configuration)
-5. [Code Generation Pipeline](#code-generation-pipeline)
-6. [Optimization Strategies](#optimization-strategies)
-7. [Build Profiles](#build-profiles)
-8. [Platform-Specific Toolchains](#platform-specific-toolchains)
-
 ## Overview
 
 **The sophisticated system that turns C++ code into working GDExtension libraries:** Building godot-cpp is more complex than typical C++ projects because it must work across multiple platforms, generate thousands of lines of binding code automatically, and integrate with Godot's specific build requirements. The build system orchestrates code generation, cross-compilation, optimization, and packaging into a single streamlined process.

@@ -1,18 +1,5 @@
 # GDScript and GDExtension Interaction
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Calling GDExtension from GDScript](#calling-gdextension-from-gdscript)
-3. [Calling GDScript from GDExtension](#calling-gdscript-from-gdextension)
-4. [Property Synchronization](#property-synchronization)
-5. [Signal Communication](#signal-communication)
-6. [Custom Types in GDScript](#custom-types-in-gdscript)
-7. [Editor Integration](#editor-integration)
-8. [Common Patterns](#common-patterns)
-9. [Performance Optimization](#performance-optimization)
-10. [Debugging Integration](#debugging-integration)
-
 ## Overview
 
 **What is GDScript interaction?** This is the two-way communication between your C++ GDExtension code and GDScript (Godot's built-in scripting language). Once properly set up, your C++ classes appear in GDScript just like built-in Godot classes - GDScript can create instances, call methods, access properties, and connect to signals.
@@ -33,14 +20,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart LR
     subgraph GDSCRIPT["GDScript Layer"]

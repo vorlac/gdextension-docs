@@ -1,20 +1,5 @@
 # Initialization Pipeline
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Entry Point Architecture](#entry-point-architecture)
-3. [Startup Sequence](#startup-sequence)
-4. [Function Pointer Loading](#function-pointer-loading)
-5. [Interface Version Negotiation](#interface-version-negotiation)
-6. [Initialization Levels](#initialization-levels)
-7. [Subsystem Initialization](#subsystem-initialization)
-8. [Class Registration Pipeline](#class-registration-pipeline)
-9. [Failure Modes](#failure-modes)
-10. [Deinitialization Process](#deinitialization-process)
-11. [State Management](#state-management)
-12. [Implementation Examples](#implementation-examples)
-
 ## Overview
 
 **The critical startup sequence that makes extensions work:** Initialization is the complex process that happens when Godot loads your GDExtension library. Think of it as a handshake between your C++ code and the Godot engine - they need to agree on communication protocols, exchange function pointers, and set up all the systems needed for your extension to work. This process must happen in the exact right order, or your extension will fail to load.
@@ -44,16 +29,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
-        flowchart:
-            curve: 'basis'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart TD
     A[Engine loads extension] --> B[Calls entry point]
@@ -105,7 +87,7 @@ typedef GDExtensionBool (*GDExtensionInitializationFunction)(
 
 > **Entry Point Naming**: The entry point function name must match what's declared in your `.gdextension` file's `entry_symbol` field. Common convention is `{library_name}_init`. The `GDE_EXPORT` macro ensures proper symbol visibility on all platforms.
 
-### Example Entry Point (`test/src/register_types.cpp:45-53`)
+### Example Entry Point (`test/src/[register_types.cpp:45](https://github.com/godotengine/godot-cpp/blob/master/test/src/register_types.cpp#L45))
 
 ```cpp
 extern "C" {
@@ -125,7 +107,7 @@ GDExtensionBool GDE_EXPORT example_library_init(
 }
 ```
 
-### InitObject Pattern (`godot.hpp:227-250`)
+### InitObject Pattern ([godot.hpp:227](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/godot.hpp#L227))
 
 The InitObject provides a builder pattern for initialization:
 
@@ -215,7 +197,7 @@ sequenceDiagram
     Note over Engine,Sub: Extension now ready for use
 ```
 
-### GDExtensionBinding::init() Flow (`godot.cpp:276-510`)
+### GDExtensionBinding::init() Flow ([godot.cpp:276](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L276))
 
 ```cpp
 bool GDExtensionBinding::init(GDExtensionInterfaceGetProcAddress p_get_proc_address,
@@ -268,7 +250,7 @@ bool GDExtensionBinding::init(GDExtensionInterfaceGetProcAddress p_get_proc_addr
 
 Function pointers are loaded in a critical order to ensure dependencies are satisfied:
 
-#### Phase 1: Essential Functions (`godot.cpp:300-312`)
+#### Phase 1: Essential Functions ([godot.cpp:300](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L300))
 
 ```cpp
 // 1. Error printing (must be first)
@@ -289,7 +271,7 @@ LOAD_PROC_ADDRESS(get_godot_version2, GDExtensionInterfaceGetGodotVersion2);
 internal::gdextension_interface_get_godot_version2(&internal::godot_version);
 ```
 
-#### Phase 2: Memory Functions (`godot.cpp:340-342`)
+#### Phase 2: Memory Functions ([godot.cpp:340](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L340))
 
 ```cpp
 LOAD_PROC_ADDRESS(mem_alloc, GDExtensionInterfaceMemAlloc);
@@ -297,7 +279,7 @@ LOAD_PROC_ADDRESS(mem_realloc, GDExtensionInterfaceMemRealloc);
 LOAD_PROC_ADDRESS(mem_free, GDExtensionInterfaceMemFree);
 ```
 
-#### Phase 3: Core Functions (`godot.cpp:343-347`)
+#### Phase 3: Core Functions ([godot.cpp:343](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L343))
 
 ```cpp
 LOAD_PROC_ADDRESS(print_warning, GDExtensionInterfacePrintWarning);
@@ -305,7 +287,7 @@ LOAD_PROC_ADDRESS(print_script_error, GDExtensionInterfacePrintScriptError);
 LOAD_PROC_ADDRESS(get_native_struct_size, GDExtensionInterfaceGetNativeStructSize);
 ```
 
-#### Phase 4: Variant System (`godot.cpp:348-396`)
+#### Phase 4: Variant System ([godot.cpp:348](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L348))
 
 50+ variant-related functions including:
 - Variant construction/destruction
@@ -314,21 +296,21 @@ LOAD_PROC_ADDRESS(get_native_struct_size, GDExtensionInterfaceGetNativeStructSiz
 - Method calls
 - Property access
 
-#### Phase 5: String Operations (`godot.cpp:397-422`)
+#### Phase 5: String Operations ([godot.cpp:397](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L397))
 
 String manipulation functions:
 - UTF-8/16/32 conversions
 - String creation
 - StringName operations
 
-#### Phase 6: Collection Functions (`godot.cpp:428-453`)
+#### Phase 6: Collection Functions ([godot.cpp:428](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L428))
 
 Array and Dictionary operations:
 - Packed array functions
 - Dictionary iteration
 - Array manipulation
 
-#### Phase 7: Object System (`godot.cpp:454-477`)
+#### Phase 7: Object System ([godot.cpp:454](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L454))
 
 Object lifecycle functions:
 - Object creation/destruction
@@ -336,7 +318,7 @@ Object lifecycle functions:
 - Method calling
 - Property access
 
-#### Phase 8: ClassDB Functions (`godot.cpp:477-489`)
+#### Phase 8: ClassDB Functions ([godot.cpp:477](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L477))
 
 Class registration functions:
 - Class registration
@@ -344,14 +326,14 @@ Class registration functions:
 - Property registration
 - Signal registration
 
-#### Phase 9: Editor Functions (`godot.cpp:491-498`)
+#### Phase 9: Editor Functions ([godot.cpp:491](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L491))
 
 Editor-specific functions (optional):
 - Plugin registration
 - Documentation loading
 - Tool functions
 
-### LOAD_PROC_ADDRESS Macro (`godot.cpp:254-259`)
+### LOAD_PROC_ADDRESS Macro ([godot.cpp:254](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L254))
 
 ```cpp
 #define LOAD_PROC_ADDRESS(m_name, m_type) \
@@ -366,7 +348,7 @@ Each function pointer is validated immediately after loading. Any failure causes
 
 ## Interface Version Negotiation
 
-### Version Compatibility Check (`godot.cpp:314-338`)
+### Version Compatibility Check ([godot.cpp:314](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L314))
 
 ```cpp
 // Version structure
@@ -400,7 +382,7 @@ if (!compatible) {
 }
 ```
 
-### Legacy Interface Detection (`godot.cpp:290-298`)
+### Legacy Interface Detection ([godot.cpp:290](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L290))
 
 The system can detect Godot 4.0 interfaces and reject them:
 
@@ -421,7 +403,7 @@ if (uintptr_t(p_get_proc_address) % alignof(LegacyGDExtensionInterface) == 0) {
 
 ## Initialization Levels
 
-### Level Definitions (`godot.hpp:215-221`)
+### Level Definitions ([godot.hpp:215](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/godot.hpp#L215))
 
 ```cpp
 enum ModuleInitializationLevel {
@@ -433,7 +415,7 @@ enum ModuleInitializationLevel {
 };
 ```
 
-### Level Initialization Callback (`godot.cpp:515-541`)
+### Level Initialization Callback ([godot.cpp:515](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L515))
 
 ```cpp
 void GDExtensionBinding::initialize_level(void *p_userdata,
@@ -513,7 +495,7 @@ void GDExtensionBinding::initialize_level(void *p_userdata,
 
 ## Subsystem Initialization
 
-### Variant System Initialization (`variant.cpp:47-73`)
+### Variant System Initialization ([variant.cpp:47](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L47))
 
 ```cpp
 void Variant::init_bindings() {
@@ -556,7 +538,7 @@ void Variant::init_bindings() {
 }
 ```
 
-### Engine Class Registration (`wrapped.cpp:141-147`)
+### Engine Class Registration ([wrapped.cpp:141](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L141))
 
 ```cpp
 void register_engine_classes() {
@@ -574,7 +556,7 @@ void register_engine_classes() {
 }
 ```
 
-### ClassDB Initialization (`class_db.cpp:411-412`)
+### ClassDB Initialization ([class_db.cpp:411](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L411))
 
 ```cpp
 void ClassDB::initialize(GDExtensionInitializationLevel p_level) {
@@ -584,13 +566,13 @@ void ClassDB::initialize(GDExtensionInitializationLevel p_level) {
 
 ## Class Registration Pipeline
 
-### Registration Macro (`class_db.hpp:365`)
+### Registration Macro ([class_db.hpp:365](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L365))
 
 ```cpp
 #define GDREGISTER_CLASS(m_class) ::godot::ClassDB::register_class<m_class>();
 ```
 
-### Registration Flow (`class_db.hpp:234-288`)
+### Registration Flow ([class_db.hpp:234](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L234))
 
 ```cpp
 template <typename T>
@@ -665,7 +647,7 @@ static void _register_class(bool p_virtual = false, bool p_exposed = true,
 }
 ```
 
-### Object Construction Pipeline (`wrapped.cpp:69-91`)
+### Object Construction Pipeline ([wrapped.cpp:69](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L69))
 
 ```cpp
 Wrapped::Wrapped(const StringName &p_godot_class) {
@@ -706,7 +688,7 @@ Wrapped::Wrapped(const StringName &p_godot_class) {
 
 ### Critical Failure Points
 
-#### 1. Missing Initialization Callback (`godot.cpp:277-279`)
+#### 1. Missing Initialization Callback ([godot.cpp:277](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L277))
 
 ```cpp
 if (!p_init_data || !p_init_data->init_callback) {
@@ -725,7 +707,7 @@ if (!internal::gdextension_interface_##m_name) {
 }
 ```
 
-#### 3. Version Incompatibility (`godot.cpp:329-337`)
+#### 3. Version Incompatibility ([godot.cpp:329](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L329))
 
 ```cpp
 if (!compatible) {
@@ -741,14 +723,14 @@ if (!compatible) {
 }
 ```
 
-#### 4. Legacy Interface Detection (`godot.cpp:296`)
+#### 4. Legacy Interface Detection ([godot.cpp:296](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L296))
 
 ```cpp
 ERR_PRINT_EARLY("Cannot load a GDExtension built for Godot 4.1+ in Godot 4.0.");
 return false;
 ```
 
-#### 5. Object Creation Without Bindings (`wrapped.cpp:89`)
+#### 5. Object Creation Without Bindings ([wrapped.cpp:89](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L89))
 
 ```cpp
 CRASH_NOW_MSG("BUG: Godot Object created without binding callbacks. "
@@ -763,7 +745,7 @@ CRASH_NOW_MSG("BUG: Godot Object created without binding callbacks. "
 
 ## Deinitialization Process
 
-### Level Deinitialization (`godot.cpp:543-557`)
+### Level Deinitialization ([godot.cpp:543](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L543))
 
 ```cpp
 void GDExtensionBinding::deinitialize_level(void *p_userdata,
@@ -788,7 +770,7 @@ void GDExtensionBinding::deinitialize_level(void *p_userdata,
 }
 ```
 
-### ClassDB Cleanup (`class_db.cpp:414-457`)
+### ClassDB Cleanup ([class_db.cpp:414](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L414))
 
 ```cpp
 void ClassDB::deinitialize(GDExtensionInitializationLevel p_level) {
@@ -840,7 +822,7 @@ void ClassDB::deinitialize(GDExtensionInitializationLevel p_level) {
 
 ## State Management
 
-### Global State Variables (`godot.cpp:247-249`)
+### Global State Variables ([godot.cpp:247](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L247))
 
 ```cpp
 bool GDExtensionBinding::api_initialized = false;
@@ -848,7 +830,7 @@ int GDExtensionBinding::level_initialized[MODULE_INITIALIZATION_LEVEL_MAX] = { 0
 GDExtensionBinding::InitDataList GDExtensionBinding::initdata;
 ```
 
-### Thread-Local Construction State (`wrapped.hpp:72-77`)
+### Thread-Local Construction State ([wrapped.hpp:72](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L72))
 
 ```cpp
 _GODOT_CPP_THREAD_LOCAL static const StringName *_constructing_extension_class_name;
@@ -860,7 +842,7 @@ _GODOT_CPP_THREAD_LOCAL static GDExtensionObjectPtr _constructing_recreate_owner
 #endif
 ```
 
-### InitData Structure (`godot.cpp:222-237`)
+### InitData Structure ([godot.cpp:222](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L222))
 
 ```cpp
 class InitData {

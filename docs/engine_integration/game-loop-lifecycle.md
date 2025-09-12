@@ -1,17 +1,5 @@
 # Game Loop and Lifecycle
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Engine Game Loop](#engine-game-loop)
-3. [Frame Processing Pipeline](#frame-processing-pipeline)
-4. [GDExtension Integration Points](#gdextension-integration-points)
-5. [Data Flow Architecture](#data-flow-architecture)
-6. [Virtual Method Invocation](#virtual-method-invocation)
-7. [Frame Timing and Order](#frame-timing-and-order)
-8. [Thread Context](#thread-context)
-9. [Performance Considerations](#performance-considerations)
-
 ## Overview
 
 **What is the game loop?** The game loop is Godot's heart - it's the continuous cycle that runs your game. Think of it like a movie projector showing frames: each "frame" processes input (what buttons were pressed), updates game logic (move characters, check collisions), runs physics simulation, and draws everything on screen. This happens 60 times per second by default.
@@ -39,6 +27,7 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
+        tertiaryTextColor: '#C1C4CA'
         edgeLabelBackground: '#262B33'
         flowchart:
             curve: 'basis'
@@ -138,6 +127,7 @@ while (running) {
 ---
 config:
     theme: 'base'
+    curve: 'straight'
     themeVariables:
         darkMode: true
         background: '#262B33'
@@ -332,14 +322,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart LR
     subgraph ENGINE["Godot Engine"]
@@ -545,28 +534,28 @@ class ThreadSafetyExample : public Node {
     Vector<float> shared_data;
 
     virtual void _ready() override {
-        // ✅ Main thread
+        // Main thread
         setup_resources();
     }
 
     virtual void _process(double delta) override {
-        // ✅ Main thread
+        // Main thread
         update_game_logic(delta);
     }
 
     virtual void _physics_process(double delta) override {
-        // ✅ Main thread
+        // Main thread
         update_physics(delta);
     }
 
     virtual void _input(const Ref<InputEvent> &event) override {
-        // ✅ Main thread
+        // Main thread
         handle_input(event);
     }
 
     // Custom threaded work
     void background_work() {
-        // ⚠️ Worker thread - need synchronization
+        // Worker thread - need synchronization
         MutexLock lock(data_mutex);
         process_shared_data();
 
@@ -575,7 +564,7 @@ class ThreadSafetyExample : public Node {
     }
 
     void update_from_thread(Variant result) {
-        // ✅ Main thread (via call_deferred)
+        // Main thread (via call_deferred)
         apply_thread_results(result);
     }
 };

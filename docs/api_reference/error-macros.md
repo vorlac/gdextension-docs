@@ -1,15 +1,5 @@
 # Error Codes and Macros Reference
 
-## Table of Contents
-1. [Error Codes](#error-codes)
-2. [Error Check Macros](#error-check-macros)
-3. [Assertion Macros](#assertion-macros)
-4. [Warning Macros](#warning-macros)
-5. [Crash Macros](#crash-macros)
-6. [Memory Debug Macros](#memory-debug-macros)
-7. [Print Macros](#print-macros)
-8. [Usage Examples](#usage-examples)
-
 ## Introduction
 
 **Robust error handling for reliable extensions:** Error handling is one of the most critical aspects of GDExtension development. When your C++ code runs inside Godot, failures can crash the editor or cause unpredictable behavior in games. Proper error handling prevents crashes, provides meaningful feedback to developers, and ensures your extension behaves gracefully under unexpected conditions.

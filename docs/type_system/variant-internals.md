@@ -1,22 +1,5 @@
 # Variant Implementation
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Memory Architecture](#memory-architecture)
-3. [Type System](#type-system)
-4. [Storage Mechanisms](#storage-mechanisms)
-5. [Type Conversion System](#type-conversion-system)
-6. [Copy-on-Write Implementation](#copy-on-write-implementation)
-7. [Constructor and Destructor Patterns](#constructor-and-destructor-patterns)
-8. [Internal Access Patterns](#internal-access-patterns)
-9. [Operator Overloading](#operator-overloading)
-10. [Performance Characteristics](#performance-characteristics)
-11. [String Encoding](#string-encoding)
-12. [Error Handling](#error-handling)
-13. [Thread Safety](#thread-safety)
-14. [ABI Compatibility](#abi-compatibility)
-
 ## Overview
 
 **Understanding Godot's universal data container:** The Variant type is Godot's solution to dynamic typing in a statically-typed C++ environment. Think of it as a "smart box" that can hold any Godot type - integers, strings, objects, arrays, dictionaries, or even custom classes. This flexibility is crucial for interfacing with GDScript, which is dynamically typed, and for creating generic APIs that work with unknown data types.
@@ -40,7 +23,7 @@ The Variant type is Godot's universal container that can hold any engine-support
 
 ### Opaque Storage Structure
 
-The Variant uses platform-dependent opaque storage (`variant.hpp:48`):
+The Variant uses platform-dependent opaque storage ([variant.hpp:48](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant.hpp#L48)):
 
 ```cpp
 class Variant {
@@ -86,7 +69,8 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 graph LR
     subgraph LAYOUT["Variant Memory Layout"]
@@ -128,7 +112,7 @@ graph LR
 
 ### Native Pointer Access
 
-Access to the opaque storage (`variant.hpp:148-150`):
+Access to the opaque storage ([variant.hpp:148](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant.hpp#L148)):
 
 ```cpp
 _FORCE_INLINE_ GDExtensionVariantPtr _native_ptr() const {
@@ -140,7 +124,7 @@ _FORCE_INLINE_ GDExtensionVariantPtr _native_ptr() const {
 
 ### Supported Types
 
-The Variant supports 40 distinct types (`variant.hpp:57-107`):
+The Variant supports 40 distinct types ([variant.hpp:57](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant.hpp#L57)):
 
 | Category | Count | Storage | Performance | Common Use |
 |----------|-------|---------|-------------|------------|
@@ -202,7 +186,7 @@ PACKED_VECTOR4_ARRAY = 38,
 
 ### Type Discrimination
 
-Type checking (`variant.cpp:669-670`):
+Type checking ([variant.cpp:669](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L669)):
 
 ```cpp
 Variant::Type Variant::get_type() const {
@@ -216,7 +200,7 @@ Variant::Type Variant::get_type() const {
 
 ### POD vs Reference Types
 
-Types are categorized by storage requirements (`variant.cpp:743-786`):
+Types are categorized by storage requirements ([variant.cpp:743](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L743)):
 
 #### Stack-Stored POD Types
 No destructor needed, stored directly in Variant:
@@ -248,7 +232,7 @@ Require destruction, use heap allocation:
 
 ### Internal Storage Access
 
-Direct internal access utilities (`variant_internal.hpp:201-214`):
+Direct internal access utilities ([variant_internal.hpp:201](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant_internal.hpp#L201)):
 
 ```cpp
 template <typename T>
@@ -270,7 +254,7 @@ public:
 };
 ```
 
-Function pointer initialization (`variant_internal.cpp:38-40`):
+Function pointer initialization ([variant_internal.cpp:38](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant_internal.cpp#L38)):
 ```cpp
 for (int i = 1; i < Variant::VARIANT_MAX; i++) {
     get_internal_func[i] = internal::gdextension_interface_variant_get_ptr_internal_getter(
@@ -283,14 +267,14 @@ for (int i = 1; i < Variant::VARIANT_MAX; i++) {
 
 ### Constructor-Based Conversions
 
-Function pointer arrays for type conversions (`variant.cpp:44-45`):
+Function pointer arrays for type conversions ([variant.cpp:44](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L44)):
 
 ```cpp
 GDExtensionVariantFromTypeConstructorFunc from_type_constructor[Variant::VARIANT_MAX]{};
 GDExtensionTypeFromVariantConstructorFunc to_type_constructor[Variant::VARIANT_MAX]{};
 ```
 
-Initialization during setup (`variant.cpp:49-52`):
+Initialization during setup ([variant.cpp:49](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L49)):
 ```cpp
 from_type_constructor[i] = internal::gdextension_interface_get_variant_from_type_constructor(
     (GDExtensionVariantType)i
@@ -323,7 +307,7 @@ bool can_convert_strict(Variant::Type p_to_type) const {
 
 ### Conversion Examples
 
-#### Integer Conversions (`variant.cpp:274-300`)
+#### Integer Conversions ([variant.cpp:274](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L274))
 ```cpp
 Variant::operator int16_t() const {
     return static_cast<int16_t>(operator int64_t());  // Narrowing
@@ -343,7 +327,7 @@ Variant::operator int64_t() const {
 }
 ```
 
-#### Object Conversions (`variant.cpp:394-414`)
+#### Object Conversions ([variant.cpp:394](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L394))
 ```cpp
 template <typename T>
 Variant::operator T *() const {
@@ -387,7 +371,7 @@ Reference-counted types with COW semantics:
 
 ### Copy Semantics
 
-#### Copy Constructor (`variant.cpp:83-84`)
+#### Copy Constructor ([variant.cpp:83](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L83))
 ```cpp
 Variant::Variant(const Variant &other) {
     internal::gdextension_interface_variant_new_copy(
@@ -397,14 +381,14 @@ Variant::Variant(const Variant &other) {
 }
 ```
 
-#### Move Constructor (`variant.cpp:87-89`)
+#### Move Constructor ([variant.cpp:87](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L87))
 ```cpp
 Variant::Variant(Variant &&other) {
     std::swap(opaque, other.opaque);  // Optimized byte swap
 }
 ```
 
-#### Assignment Operators (`variant.cpp:653-665`)
+#### Assignment Operators ([variant.cpp:653](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L653))
 ```cpp
 Variant &Variant::operator=(const Variant &other) {
     clear();  // Release current value
@@ -433,7 +417,7 @@ Reference counting is entirely managed by the engine:
 
 ### Typed Constructors
 
-#### POD Type Construction (`variant.cpp:97-109`)
+#### POD Type Construction ([variant.cpp:97](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L97))
 ```cpp
 Variant::Variant(bool p_bool) {
     from_type_constructor[BOOL](_native_ptr(), &p_bool);
@@ -448,7 +432,7 @@ Variant::Variant(double p_float) {
 }
 ```
 
-#### Reference Type Construction (`variant.cpp:110-121`)
+#### Reference Type Construction ([variant.cpp:110](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L110))
 ```cpp
 Variant::Variant(const String &p_string) {
     from_type_constructor[STRING](_native_ptr(), &p_string);
@@ -459,14 +443,14 @@ Variant::Variant(const StringName &p_string_name) {
 }
 ```
 
-#### Object Construction (`variant.cpp:152-155`)
+#### Object Construction ([variant.cpp:152](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L152))
 ```cpp
 Variant::Variant(const Object *p_object) {
     from_type_constructor[OBJECT](_native_ptr(), &p_object);
 }
 ```
 
-### Destructor Pattern (`variant.cpp:266-271`)
+### Destructor Pattern ([variant.cpp:266](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L266))
 
 ```cpp
 Variant::~Variant() {
@@ -484,7 +468,7 @@ void Variant::clear() {
 
 ### Direct Type Access
 
-Specialized accessors for performance (`variant_internal.hpp:44-195`):
+Specialized accessors for performance ([variant_internal.hpp:44](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant_internal.hpp#L44)):
 
 ```cpp
 // Integer access
@@ -518,7 +502,7 @@ _FORCE_INLINE_ static Object **get_object(Variant *v) {
 
 ### Type-Safe Setters
 
-Setting values with type safety (`variant_internal.hpp:216-367`):
+Setting values with type safety ([variant_internal.hpp:216](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant_internal.hpp#L216)):
 
 ```cpp
 template <>
@@ -536,7 +520,7 @@ _FORCE_INLINE_ void VariantInternal::set<int64_t>(
 
 ## Operator Overloading
 
-### Arithmetic Operators (`variant.cpp:797-887`)
+### Arithmetic Operators ([variant.cpp:797](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L797))
 
 ```cpp
 // Addition
@@ -566,7 +550,7 @@ Variant Variant::operator*(const Variant &other) const {
 }
 ```
 
-### Comparison Operators (`variant.cpp:674-727`)
+### Comparison Operators ([variant.cpp:674](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L674))
 
 ```cpp
 bool Variant::operator==(const Variant &other) const {
@@ -594,7 +578,7 @@ bool Variant::operator<(const Variant &other) const {
 }
 ```
 
-### Indexing Operators (`variant.cpp:916-1010`)
+### Indexing Operators ([variant.cpp:916](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L916))
 
 ```cpp
 Variant &Variant::operator[](const Variant &key) {

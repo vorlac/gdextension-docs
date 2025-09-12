@@ -1,15 +1,6 @@
 # Complex Patterns
 
-## Table of Contents
-1. [Thread-Safe Singletons](#thread-safe-singletons)
-2. [Lock-Free Data Structures](#lock-free-data-structures)
-3. [Copy-on-Write (COW) Implementation](#copy-on-write-cow-implementation)
-4. [Memory Pool Management](#memory-pool-management)
-5. [Custom Server Patterns](#custom-server-patterns)
-6. [Thread Synchronization](#thread-synchronization)
-7. [Performance Patterns](#performance-patterns)
-
-## Overview
+## Introduction
 
 This document covers advanced implementation patterns used throughout godot-cpp for performance, thread safety, and memory efficiency. These patterns are essential for understanding how godot-cpp achieves high performance while maintaining safety across the binary boundary.
 
@@ -162,7 +153,7 @@ Ultra-lightweight spinlock for short critical sections:
 | **Memory** | 1 byte | 40+ bytes | SpinLock is cache-friendly |
 
 ```cpp
-// include/godot_cpp/templates/spin_lock.hpp:37-49
+// include/godot_cpp/templates/[spin_lock.hpp:37](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/spin_lock.hpp#L37)
 class SpinLock {
     std::atomic_flag locked = ATOMIC_FLAG_INIT;
 
@@ -234,14 +225,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart LR
     subgraph BW["Before Write"]
@@ -268,7 +258,7 @@ flowchart LR
 ```
 
 ```cpp
-// include/godot_cpp/templates/cowdata.hpp:65-200
+// include/godot_cpp/templates/[cowdata.hpp:65](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/cowdata.hpp#L65)
 template <typename T>
 class CowData {
 private:
@@ -495,7 +485,7 @@ private:
 RAII mutex locking for exception safety:
 
 ```cpp
-// include/godot_cpp/core/mutex_lock.hpp:37-49
+// include/godot_cpp/core/[mutex_lock.hpp:37](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/mutex_lock.hpp#L37)
 class MutexLock {
     const Mutex &mutex;
 

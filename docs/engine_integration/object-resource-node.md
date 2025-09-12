@@ -1,18 +1,5 @@
 # Object, Resource, and Node Classes
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [godot::Object - The Foundation](#godotobject---the-foundation)
-3. [godot::Resource - Data Management](#godotresource---data-management)
-4. [godot::Node - Scene Tree Building Block](#godotnode---scene-tree-building-block)
-5. [State Management and Bookkeeping](#state-management-and-bookkeeping)
-6. [Signal System](#signal-system)
-7. [Property System](#property-system)
-8. [Method Binding](#method-binding)
-9. [Memory Management Patterns](#memory-management-patterns)
-10. [Common Usage Patterns](#common-usage-patterns)
-
 ## Overview
 
 **What are Objects, Resources, and Nodes?** These are the three fundamental building blocks of Godot. Think of `Object` as the foundation that provides basic features every game object needs - like the ability to receive signals, store properties, and call methods. `Resource` extends Object for data that should be saved and loaded (like textures, sounds, or custom save files). `Node` extends Object for things that exist in your game world and participate in the game loop (like players, enemies, or UI elements).

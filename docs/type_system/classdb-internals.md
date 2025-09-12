@@ -1,22 +1,5 @@
 # ClassDB Internals
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Core Architecture](#core-architecture)
-3. [ClassInfo Structure](#classinfo-structure)
-4. [GDCLASS Macro Deep Dive](#gdclass-macro-deep-dive)
-5. [MethodBind Polymorphic Hierarchy](#methodbind-polymorphic-hierarchy)
-6. [Template Metaprogramming Patterns](#template-metaprogramming-patterns)
-7. [Method Binding Process](#method-binding-process)
-8. [Virtual Method System](#virtual-method-system)
-9. [Property Registration](#property-registration)
-10. [Signal System](#signal-system)
-11. [Memory Management](#memory-management)
-12. [Error Conditions](#error-conditions)
-13. [Thread Safety](#thread-safety)
-14. [Cross-Binary Communication](#cross-binary-communication)
-
 ## Overview
 
 The ClassDB system is the central registry and binding mechanism that bridges C++ classes with Godot's dynamic type system. It handles method registration, virtual dispatch, property management, and cross-binary communication between GDExtension libraries and the Godot engine.
@@ -36,7 +19,7 @@ The ClassDB system is the central registry and binding mechanism that bridges C+
 The ClassDB maintains several static data structures for class management:
 
 ```cpp
-// src/core/class_db.cpp:43-47
+// src/core/[class_db.cpp:43](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L43)
 static std::unordered_map<StringName, ClassInfo> classes;  // Class registry
 static std::unordered_map<StringName, const GDExtensionInstanceBindingCallbacks *> instance_binding_callbacks;
 static std::vector<StringName> class_register_order;  // Tracks registration order for cleanup
@@ -56,16 +39,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
-        flowchart:
-            curve: 'basis'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart TD
     A[GDREGISTER_CLASS] --> B{Type Checks}
@@ -94,7 +74,7 @@ flowchart TD
     style K fill:#425f5fff,stroke:#8c9c81ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
 ```
 
-1. **Class Registration Entry** (`ClassDB::_register_class`, class_db.hpp:235-288)
+1. **Class Registration Entry** (`ClassDB::_register_class`, [class_db.hpp:235](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L235))
 2. **Type Validation** (static_assert checks - must inherit from Object)
 3. **ClassInfo Creation** (allocates metadata structure)
 4. **Class Initialization** (`T::initialize_class()` - recursive parent init)
@@ -103,7 +83,7 @@ flowchart TD
 
 ## ClassInfo Structure
 
-The ClassInfo structure (`class_db.hpp:89-105`) stores all metadata for a registered class:
+The ClassInfo structure ([class_db.hpp:89](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L89)) stores all metadata for a registered class:
 
 | Field | Type | Purpose | Memory Impact |
 |-------|------|---------|---------------|
@@ -153,7 +133,7 @@ struct ClassInfo {
 
 ## GDCLASS Macro Deep Dive
 
-The GDCLASS macro (`wrapped.hpp:184-407`) generates extensive boilerplate for Godot integration:
+The GDCLASS macro ([wrapped.hpp:184](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L184)) generates extensive boilerplate for Godot integration:
 
 > **GDCLASS Requirements**:
 > - Must be first macro in class body (changes access to private)
@@ -163,27 +143,27 @@ The GDCLASS macro (`wrapped.hpp:184-407`) generates extensive boilerplate for Go
 
 ### Generated Components
 
-#### 1. Type System Integration (wrapped.hpp:242-244)
+#### 1. Type System Integration ([wrapped.hpp:242](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L242))
 ```cpp
 typedef m_class self_type;       // Current class type
 typedef m_inherits parent_type;  // Parent class type
 ```
 
-#### 2. Static Class Name (wrapped.hpp:191-195)
+#### 2. Static Class Name ([wrapped.hpp:191](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L191))
 ```cpp
 static const char *get_class_static() {
     return #m_class;  // Stringified class name
 }
 ```
 
-#### 3. Method Binding Hook (wrapped.hpp:200-202)
+#### 3. Method Binding Hook ([wrapped.hpp:200](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L200))
 ```cpp
 static void (*_get_bind_methods())() {
     return &m_class::_bind_methods;  // Pointer to binding function
 }
 ```
 
-#### 4. Virtual Method Detection System (wrapped.hpp:204-234)
+#### 4. Virtual Method Detection System ([wrapped.hpp:204](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L204))
 
 For each virtual method, generates:
 ```cpp
@@ -194,7 +174,7 @@ static m_ret (_get_##m_name())(__VA_ARGS__) {
 
 This enables compile-time detection of virtual method overrides through function pointer comparison.
 
-#### 5. Class Initialization Chain (wrapped.hpp:245-256)
+#### 5. Class Initialization Chain ([wrapped.hpp:245](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L245))
 
 ```cpp
 static void initialize_class() {
@@ -215,7 +195,7 @@ static void initialize_class() {
 }
 ```
 
-### Instance Creation and Destruction (wrapped.hpp:257-282)
+### Instance Creation and Destruction ([wrapped.hpp:257](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L257))
 
 ```cpp
 static GDExtensionObjectPtr _gde_binding_create_callback(void *p_token, void *p_instance) {
@@ -229,7 +209,7 @@ static void _gde_binding_free_callback(void *p_token, void *p_instance, void *p_
 }
 ```
 
-### GDExtension Binding Callbacks (wrapped.hpp:401-405)
+### GDExtension Binding Callbacks ([wrapped.hpp:401](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L401))
 
 ```cpp
 static constexpr GDExtensionInstanceBindingCallbacks _gde_binding_callbacks = {
@@ -241,7 +221,7 @@ static constexpr GDExtensionInstanceBindingCallbacks _gde_binding_callbacks = {
 
 ## MethodBind Polymorphic Hierarchy
 
-### Base MethodBind Class (method_bind.hpp:49-155)
+### Base MethodBind Class ([method_bind.hpp:49](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L49))
 
 Core members that all method bindings share:
 
@@ -280,7 +260,7 @@ public:
 
 ### Template Specialization Hierarchy
 
-#### MethodBindT - Non-const Methods, No Return (method_bind.hpp:290-346)
+#### MethodBindT - Non-const Methods, No Return ([method_bind.hpp:290](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L290))
 
 ```cpp
 template <typename... P>
@@ -300,14 +280,14 @@ class MethodBindT : public MethodBind {
 };
 ```
 
-#### MethodBindTC - Const Methods, No Return (method_bind.hpp:366-423)
+#### MethodBindTC - Const Methods, No Return ([method_bind.hpp:366](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L366))
 
 Similar to MethodBindT but stores const member function pointer:
 ```cpp
 void (MB_T::*method)(P...) const;
 ```
 
-#### MethodBindTR - Non-const Methods, With Return (method_bind.hpp:443-505)
+#### MethodBindTR - Non-const Methods, With Return ([method_bind.hpp:443](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L443))
 
 ```cpp
 template <typename R, typename... P>
@@ -322,9 +302,9 @@ class MethodBindTR : public MethodBind {
 };
 ```
 
-#### MethodBindTRC - Const Methods, With Return (method_bind.hpp:525-588)
+#### MethodBindTRC - Const Methods, With Return ([method_bind.hpp:525](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L525))
 
-#### MethodBindTS/TRS - Static Methods (method_bind.hpp:606-734)
+#### MethodBindTS/TRS - Static Methods ([method_bind.hpp:606](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L606))
 
 Static methods don't need an instance pointer:
 ```cpp
@@ -334,7 +314,7 @@ class MethodBindTS : public MethodBind {
 };
 ```
 
-### VarArg Method Support (method_bind.hpp:157-274)
+### VarArg Method Support ([method_bind.hpp:157](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.hpp#L157))
 
 Variable argument methods use a special binding class:
 
@@ -348,7 +328,7 @@ class MethodBindVarArgT : public MethodBindVarArgBase<R, should_returns> {
 
 ## Template Metaprogramming Patterns
 
-### Type Information Extraction (type_info.hpp:103-140)
+### Type Information Extraction ([type_info.hpp:103](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L103))
 
 The GetTypeInfo template extracts type metadata at compile time:
 
@@ -364,7 +344,7 @@ struct GetTypeInfo<T *> {
 };
 ```
 
-### Argument Type Detection (binder_common.hpp:488-537)
+### Argument Type Detection ([binder_common.hpp:488](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L488))
 
 Parameter pack expansion extracts argument types:
 
@@ -416,7 +396,7 @@ struct method_return_type<R (T::*)(Args...)> {
 
 ## Method Binding Process
 
-### bind_method Flow (class_db.cpp:130-186)
+### bind_method Flow ([class_db.cpp:130](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L130))
 
 1. **Validation Phase** (lines 133-156)
    ```cpp
@@ -449,7 +429,7 @@ struct method_return_type<R (T::*)(Args...)> {
    bind_method_godot(p_class_name, p_method);
    ```
 
-### Cross-Binary Registration (class_db.cpp:188-235)
+### Cross-Binary Registration ([class_db.cpp:188](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L188))
 
 ```cpp
 void ClassDB::bind_method_godot(const StringName &p_class_name, MethodBind *p_method) {
@@ -486,7 +466,7 @@ void ClassDB::bind_method_godot(const StringName &p_class_name, MethodBind *p_me
 }
 ```
 
-### Static Dispatch Functions (method_bind.cpp:90-101)
+### Static Dispatch Functions ([method_bind.cpp:90](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.cpp#L90))
 
 ```cpp
 // Variant-based dispatch (for dynamic calls)
@@ -516,7 +496,7 @@ static void bind_ptrcall(void *p_method_userdata,
 
 ## Virtual Method System
 
-### Registration Process (class_db.cpp:331-344)
+### Registration Process ([class_db.cpp:331](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L331))
 
 ```cpp
 void ClassDB::bind_virtual_method(const StringName &p_class,
@@ -532,7 +512,7 @@ void ClassDB::bind_virtual_method(const StringName &p_class,
 }
 ```
 
-### Virtual Method Resolution (class_db.cpp:288-312)
+### Virtual Method Resolution ([class_db.cpp:288](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L288))
 
 ```cpp
 GDExtensionClassCallVirtual ClassDB::get_virtual_func(void *p_userdata,
@@ -563,7 +543,7 @@ GDExtensionClassCallVirtual ClassDB::get_virtual_func(void *p_userdata,
 }
 ```
 
-### BIND_VIRTUAL_METHOD Macro (class_db.hpp:226-232)
+### BIND_VIRTUAL_METHOD Macro ([class_db.hpp:226](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L226))
 
 ```cpp
 #define BIND_VIRTUAL_METHOD(m_class, m_method, m_hash) \
@@ -595,7 +575,7 @@ if ((void *)(Derived::_get_##m_name) != (void *)(Parent::_get_##m_name)) {
 
 ## Property Registration
 
-### ADD_PROPERTY Macro Flow (class_db.cpp:72-112)
+### ADD_PROPERTY Macro Flow ([class_db.cpp:72](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L72))
 
 ```cpp
 void ClassDB::add_property(const StringName &p_class,
@@ -661,7 +641,7 @@ void ClassDB::add_property_group(const StringName &p_class,
 
 ## Signal System
 
-### Signal Registration (class_db.cpp:115-128)
+### Signal Registration ([class_db.cpp:115](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L115))
 
 ```cpp
 void ClassDB::add_signal(const StringName &p_class, const MethodInfo &p_signal) {
@@ -720,12 +700,12 @@ void ClassDB::add_signal(const StringName &p_class, const MethodInfo &p_signal) 
    }
    ```
 
-2. **Storage** (class_db.cpp:182)
+2. **Storage** ([class_db.cpp:182](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L182))
    ```cpp
    type->second.method_map[p_method->get_name()] = p_method;
    ```
 
-3. **Deletion** (class_db.cpp:426-428)
+3. **Deletion** ([class_db.cpp:426](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L426))
    ```cpp
    // During deinitialization
    for (auto &method : type.second.method_map) {
@@ -733,7 +713,7 @@ void ClassDB::add_signal(const StringName &p_class, const MethodInfo &p_signal) 
    }
    ```
 
-### Argument Type Arrays (method_bind.cpp:67-80)
+### Argument Type Arrays ([method_bind.cpp:67](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.cpp#L67))
 
 ```cpp
 void MethodBind::_generate_argument_types(int p_count) {
@@ -757,7 +737,7 @@ MethodBind::~MethodBind() {
 Godot allocates instance memory, godot-cpp constructs/destructs:
 
 ```cpp
-// Construction (wrapped.hpp:257-261)
+// Construction ([wrapped.hpp:257](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L257))
 static GDExtensionObjectPtr _gde_binding_create_callback(void *p_token,
                                                          void *p_instance) {
     // Placement new - construct in Godot's memory
@@ -766,7 +746,7 @@ static GDExtensionObjectPtr _gde_binding_create_callback(void *p_token,
     );
 }
 
-// Destruction (wrapped.hpp:263-265)
+// Destruction ([wrapped.hpp:263](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L263))
 static void _gde_binding_free_callback(void *p_token,
                                        void *p_instance,
                                        void *p_binding) {
@@ -779,19 +759,19 @@ static void _gde_binding_free_callback(void *p_token,
 
 ### Compile-Time Errors
 
-1. **Missing GDCLASS Macro** (class_db.hpp:236)
+1. **Missing GDCLASS Macro** ([class_db.hpp:236](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L236))
    ```cpp
    static_assert(TypesAreSame<typename T::self_type, T>::value,
                  "Class not declared properly, please use GDCLASS.");
    ```
 
-2. **Missing _bind_methods** (class_db.hpp:237)
+2. **Missing _bind_methods** ([class_db.hpp:237](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L237))
    ```cpp
    static_assert(!FunctionsAreSame<T::self_type::_bind_methods, T::parent_type::_bind_methods>::value,
                  "Class must declare 'static void _bind_methods'.");
    ```
 
-3. **Abstract Class Misregistration** (class_db.hpp:238)
+3. **Abstract Class Misregistration** ([class_db.hpp:238](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L238))
    ```cpp
    static_assert(!std::is_abstract_v<T> || is_abstract,
                  "Class is abstract, please use GDREGISTER_ABSTRACT_CLASS.");
@@ -799,31 +779,31 @@ static void _gde_binding_free_callback(void *p_token,
 
 ### Runtime Errors
 
-1. **Non-existent Class** (class_db.cpp:134-137)
+1. **Non-existent Class** ([class_db.cpp:134](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L134))
    ```cpp
    ERR_FAIL_COND_MSG(type == classes.end(),
                      "Class doesn't exist: " + String(p_class_name));
    ```
 
-2. **Duplicate Method** (class_db.cpp:141-144)
+2. **Duplicate Method** ([class_db.cpp:141](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L141))
    ```cpp
    ERR_FAIL_COND_MSG(type->second.method_map.find(p_method->get_name()) != type->second.method_map.end(),
                      "Binding duplicate method: " + String(p_method->get_instance_class()) + "::" + String(p_method->get_name()));
    ```
 
-3. **Virtual Method Conflict** (class_db.cpp:146-149)
+3. **Virtual Method Conflict** ([class_db.cpp:146](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L146))
    ```cpp
    ERR_FAIL_COND_MSG(type->second.virtual_methods.find(p_method->get_name()) != type->second.virtual_methods.end(),
                      "Method already bound as virtual: " + String(p_method->get_instance_class()) + "::" + String(p_method->get_name()));
    ```
 
-4. **Argument Count Mismatch** (class_db.cpp:153-156)
+4. **Argument Count Mismatch** ([class_db.cpp:153](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L153))
    ```cpp
    ERR_FAIL_COND_MSG(p_method->get_argument_count() != p_method_info.argument_count,
                      "Argument count mismatch for method: " + String(p_method->get_instance_class()) + "::" + String(p_method->get_name()));
    ```
 
-5. **Invalid Property Configuration** (class_db.cpp:85-98)
+5. **Invalid Property Configuration** ([class_db.cpp:85](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L85))
    - Duplicate property names
    - Non-existent setter/getter methods
    - Incorrect setter argument count (must be 1)
@@ -833,12 +813,12 @@ static void _gde_binding_free_callback(void *p_token,
 
 ### Thread-Safe Operations
 
-1. **Virtual Method Resolution** (class_db.cpp:290)
+1. **Virtual Method Resolution** ([class_db.cpp:290](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L290))
    ```cpp
    // get_virtual_func is thread-safe - only reads data
    ```
 
-2. **Singleton Access** (class_db.hpp:172-185)
+2. **Singleton Access** ([class_db.hpp:172](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/class_db.hpp#L172))
    ```cpp
    static Object *get_singleton(const StringName &p_class) {
        std::lock_guard<std::mutex> lock(engine_singletons_mutex);
@@ -868,11 +848,11 @@ static std::mutex engine_singletons_mutex;
 
 The ClassDB system bridges C++ methods to Godot through function pointer tables:
 
-1. **Method Dispatch Table** (method_bind.cpp:90-101)
+1. **Method Dispatch Table** ([method_bind.cpp:90](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_bind.cpp#L90))
    - `bind_call` - Variant-based dynamic dispatch
    - `bind_ptrcall` - Direct pointer dispatch for performance
 
-2. **Virtual Method Table** (class_db.cpp:288-312)
+2. **Virtual Method Table** ([class_db.cpp:288](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L288))
    - Runtime resolution through inheritance chain
    - Hash-based signature validation
 

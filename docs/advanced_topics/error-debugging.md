@@ -1,21 +1,6 @@
 # Error Handling & Debugging
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Error Macro System](#error-macro-system)
-3. [Error Propagation](#error-propagation)
-4. [Debug Support](#debug-support)
-5. [Memory Debugging](#memory-debugging)
-6. [Thread Safety](#thread-safety)
-7. [Performance Optimizations](#performance-optimizations)
-8. [Print and Logging System](#print-and-logging-system)
-9. [Error Conditions Reference](#error-conditions-reference)
-10. [Platform-Specific Behavior](#platform-specific-behavior)
-11. [Best Practices](#best-practices)
-12. [Implementation Examples](#implementation-examples)
-
-## Overview
+## Introduction
 
 The godot-cpp error handling system provides a comprehensive macro-based architecture for error detection, reporting, and debugging. The system bridges C++ extensions with the Godot engine through the GDExtension interface, ensuring proper error propagation across binary boundaries.
 
@@ -38,16 +23,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
-        flowchart:
-            curve: 'basis'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart TD
     A[Error Condition] --> B{Type?}
@@ -103,7 +85,7 @@ The error handling system provides seven distinct categories of macros:
 
 > **Performance Impact**: Index checking macros add ~2-3 CPU cycles in release builds (simple comparison), but provide crucial safety. In debug builds, they also generate detailed error messages with file/line information. Always use these instead of manual checks for consistency.
 
-#### Integer Index Validation (`error_macros.hpp:90-192`)
+#### Integer Index Validation ([error_macros.hpp:90](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L90))
 
 | Macro | Return Behavior | Use Case | Debug Info |
 |-------|----------------|----------|------------|
@@ -133,7 +115,7 @@ CRASH_BAD_INDEX(m_index, m_size)
 CRASH_BAD_INDEX_MSG(m_index, m_size, m_msg)
 ```
 
-#### Unsigned Index Validation (`error_macros.hpp:194-294`)
+#### Unsigned Index Validation ([error_macros.hpp:194](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L194))
 
 ```cpp
 // Optimized for unsigned types (no negative check)
@@ -149,7 +131,7 @@ CRASH_BAD_UNSIGNED_INDEX(m_index, m_size)
 CRASH_BAD_UNSIGNED_INDEX_MSG(m_index, m_size, m_msg)
 ```
 
-### Null Pointer Checking Macros (`error_macros.hpp:296-366`)
+### Null Pointer Checking Macros ([error_macros.hpp:296](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L296))
 
 > **Usage Guidance**: Use null checks at public API boundaries and after dynamic casts. The macro automatically generates a descriptive message including the parameter name. For internal functions where null is impossible, use `DEV_ASSERT` instead for debug-only validation.
 
@@ -170,7 +152,7 @@ ERR_FAIL_NULL_V_MSG(m_param, m_retval, m_msg)
 ERR_FAIL_NULL_V_EDMSG(m_param, m_retval, m_msg)
 ```
 
-### Condition Checking Macros (`error_macros.hpp:376-546`)
+### Condition Checking Macros ([error_macros.hpp:376](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L376))
 
 > **Best Practice**: Use `ERR_FAIL_COND` for preconditions, `ERR_CONTINUE` for skipping invalid loop iterations, and `ERR_BREAK` for early loop termination. These macros make error handling explicit and generate consistent error messages across the codebase.
 
@@ -201,7 +183,7 @@ CRASH_COND(m_cond)
 CRASH_COND_MSG(m_cond, m_msg)
 ```
 
-### Generic Error Macros (`error_macros.hpp:549-623`)
+### Generic Error Macros ([error_macros.hpp:549](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L549))
 
 ```cpp
 // Always fails and returns
@@ -219,7 +201,7 @@ ERR_FAIL_V_MSG(m_retval, m_msg)
 ERR_FAIL_V_EDMSG(m_retval, m_msg)
 ```
 
-### Print Macros (`error_macros.hpp:632-664`)
+### Print Macros ([error_macros.hpp:632](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L632))
 
 ```cpp
 // Print error without affecting control flow
@@ -233,7 +215,7 @@ ERR_PRINT_ONCE(m_msg)      // NOT thread-safe!
 ERR_PRINT_ED_ONCE(m_msg)   // NOT thread-safe!
 ```
 
-### Warning Macros (`error_macros.hpp:667-737`)
+### Warning Macros ([error_macros.hpp:667](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L667))
 
 ```cpp
 // Print warning message
@@ -253,7 +235,7 @@ WARN_DEPRECATED            // Uses std::atomic<bool>
 WARN_DEPRECATED_MSG(m_msg)  // Thread-safe with custom message
 ```
 
-### Fatal Error Macros (`error_macros.hpp:744-764`)
+### Fatal Error Macros ([error_macros.hpp:744](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L744))
 
 ```cpp
 // Immediate application crash
@@ -263,7 +245,7 @@ CRASH_NOW()
 CRASH_NOW_MSG(m_msg)
 ```
 
-### Debug-Only Macros (`error_macros.hpp:770-803`)
+### Debug-Only Macros ([error_macros.hpp:770](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L770))
 
 > **DEV_ASSERT Strategy**: Use for invariants that should never fail in correct code. These compile to nothing in release builds (zero overhead), but catch logic errors during development. Perfect for checking function postconditions, data structure integrity, and algorithm correctness.
 
@@ -281,7 +263,7 @@ CHECK_METHOD_BIND_RET(m_mb, m_ret)
 
 ## Error Propagation
 
-### Cross-Binary Interface (`error_macros.cpp:40-86`)
+### Cross-Binary Interface ([error_macros.cpp:40](https://github.com/godotengine/godot-cpp/blob/master/src/core/error_macros.cpp#L40))
 
 ```cpp
 void _err_print_error(const char *p_function, const char *p_file, int p_line,
@@ -315,7 +297,7 @@ void _err_print_index_error(const char *p_function, const char *p_file, int p_li
 
 ### GDExtensionCallError Structure
 
-Error codes for method calls (`gdextension_interface.h:183-197`):
+Error codes for method calls ([gdextension_interface.h:183](https://github.com/godotengine/godot/blob/master/core/extension/gdextension_interface.h#L183)):
 
 ```cpp
 typedef enum {
@@ -356,7 +338,7 @@ if (err.error != GDEXTENSION_CALL_OK) {
 
 ## Debug Support
 
-### Platform-Specific Trap Generation (`error_macros.hpp:59-69`)
+### Platform-Specific Trap Generation ([error_macros.hpp:59](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L59))
 
 ```cpp
 #ifdef _MSC_VER
@@ -382,7 +364,7 @@ if (err.error != GDEXTENSION_CALL_OK) {
 #endif
 ```
 
-#### Function Name Resolution (`error_macros.hpp:53-57`)
+#### Function Name Resolution ([error_macros.hpp:53](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L53))
 
 ```cpp
 #ifdef __GNUC__
@@ -402,7 +384,7 @@ Error reports include:
 
 ## Memory Debugging
 
-### Memory Layout for Debugging (`memory.hpp:67-77`)
+### Memory Layout for Debugging ([memory.hpp:67](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L67))
 
 ```cpp
 // Memory layout with debugging headers
@@ -414,7 +396,7 @@ Error reports include:
 // Offset:     ↑ SIZE_OFFSET        ↑ ELEMENT_OFFSET    ↑ DATA_OFFSET
 ```
 
-### Array Bounds Validation (`memory.hpp:147-173`)
+### Array Bounds Validation ([memory.hpp:147](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L147))
 
 ```cpp
 template <typename T>
@@ -467,7 +449,7 @@ if (allocation_count != 0) {
 
 ### Thread-Safe Macros
 
-#### Deprecation Warnings (`error_macros.hpp:716-737`)
+#### Deprecation Warnings ([error_macros.hpp:716](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L716))
 
 ```cpp
 #define WARN_DEPRECATED \
@@ -494,7 +476,7 @@ if (allocation_count != 0) {
 
 ### Non-Thread-Safe Macros
 
-#### Print-Once Macros (`error_macros.hpp:644-652`)
+#### Print-Once Macros ([error_macros.hpp:644](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/error_macros.hpp#L644))
 
 ```cpp
 #define ERR_PRINT_ONCE(m_msg) \
@@ -518,7 +500,7 @@ if (allocation_count != 0) {
 
 ## Performance Optimizations
 
-### Branch Prediction Hints (`defs.hpp:278-284`)
+### Branch Prediction Hints ([defs.hpp:278](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/defs.hpp#L278))
 
 ```cpp
 #if defined(__GNUC__)
@@ -562,7 +544,7 @@ if (unlikely((m_index) < 0 || (m_index) >= (m_size))) {
 
 ## Print and Logging System
 
-### Print Functions (`print_string.hpp:36-71`)
+### Print Functions ([print_string.hpp:36](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/print_string.hpp#L36))
 
 ```cpp
 // Error output
@@ -589,7 +571,7 @@ inline void print_line_rich(const Variant &p_variant) {
 }
 ```
 
-### Verbosity Control (`print_string.cpp:36-38`)
+### Verbosity Control ([print_string.cpp:36](https://github.com/godotengine/godot-cpp/blob/master/src/core/print_string.cpp#L36))
 
 ```cpp
 bool is_print_verbose_enabled() {

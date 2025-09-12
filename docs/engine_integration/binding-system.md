@@ -1,18 +1,5 @@
 # Binding System
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [What Are Bindings](#what-are-bindings)
-3. [Binding Architecture](#binding-architecture)
-4. [Method Binding](#method-binding)
-5. [Property Binding](#property-binding)
-6. [Signal Binding](#signal-binding)
-7. [Virtual Method Binding](#virtual-method-binding)
-8. [Type Conversion and Marshalling](#type-conversion-and-marshalling)
-9. [Binding Generation Process](#binding-generation-process)
-10. [Performance Considerations](#performance-considerations)
-
 ## Overview
 
 **What are bindings?** Think of bindings as translators between your C++ code and the rest of Godot. When you write a C++ method, Godot doesn't automatically know it exists or how to call it. Bindings are the registration process that tells Godot "here's a C++ function, here's its name, here are its parameters, and here's how to call it from GDScript or the editor."
@@ -33,15 +20,13 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#C1C4CAAA'
-        background: '#262B33'
-        primaryColor: '#2b4268ff'
-        primaryTextColor: '#C1C4CAff'
+        lineColor: '#ffffff'
+        primaryTextColor: '#ffffff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#C1C4CA'
-        defaultLinkColor: '#C1C4CA'
-        textColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        nodeTextColor: '#ffffff'
+        defaultLinkColor: '#ffffff'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 flowchart LR
     subgraph GDSCRIPT["GDScript/Editor"]

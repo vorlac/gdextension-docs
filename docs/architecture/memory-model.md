@@ -1,20 +1,5 @@
 # Memory Model
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Memory Allocation System](#memory-allocation-system)
-3. [Custom Allocators](#custom-allocators)
-4. [Reference Counting](#reference-counting)
-5. [Object Lifecycle](#object-lifecycle)
-6. [Memory Boundaries](#memory-boundaries)
-7. [COW Data Structures](#cow-data-structures)
-8. [Memory Alignment](#memory-alignment)
-9. [Thread Safety](#thread-safety)
-10. [Memory Tracking](#memory-tracking)
-11. [Performance Characteristics](#performance-characteristics)
-12. [Error Handling](#error-handling)
-
 ## Overview
 
 The godot-cpp memory model provides a sophisticated allocation system with clear ownership boundaries between C++ extensions and the Godot engine. It features custom allocators, atomic reference counting, copy-on-write optimizations, and careful memory alignment for optimal performance.
@@ -45,7 +30,8 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262b33'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
         flowchart:
             curve: 'basis'
 ---
@@ -87,7 +73,7 @@ flowchart TD
 
 ### Core Memory Class
 
-The Memory class provides static allocation functions (`memory.hpp:63-82`):
+The Memory class provides static allocation functions ([memory.hpp:63](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L63)):
 
 ```cpp
 class Memory {
@@ -108,7 +94,7 @@ public:
 
 ### Memory Layout for Allocations
 
-Array allocations include metadata headers (`memory.hpp:67-77`):
+Array allocations include metadata headers ([memory.hpp:67](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L67)):
 
 ```cpp
 // Memory layout with alignment padding:
@@ -130,7 +116,7 @@ static constexpr size_t DATA_OFFSET = ((ELEMENT_OFFSET + sizeof(uint64_t)) % ali
 
 ### memnew/memdelete Macros
 
-#### memnew Macro (`memory.hpp:99`)
+#### memnew Macro ([memory.hpp:99](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L99))
 
 ```cpp
 #define memnew(m_class) \
@@ -149,7 +135,7 @@ static constexpr size_t DATA_OFFSET = ((ELEMENT_OFFSET + sizeof(uint64_t)) % ali
 2. Placement `new("", "")` - Allocates via Godot's allocator with debug info
 3. `_post_initialize()` - Registers object with engine if it's a Wrapped type
 
-#### memdelete Template (`memory.hpp:104-116`)
+#### memdelete Template ([memory.hpp:104](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L104))
 
 | Type | Behavior | Implementation | When to Use |
 |------|----------|----------------|-------------|
@@ -176,7 +162,7 @@ void memdelete(T *p_class) {
 
 > **Critical**: Never use `delete` on Godot objects! It bypasses reference counting and will cause crashes. Always use `memdelete` or let `Ref<T>` handle it automatically.
 
-#### memnew_arr Macro (`memory.hpp:118`)
+#### memnew_arr Macro ([memory.hpp:118](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L118))
 
 ```cpp
 #define memnew_arr(m_class, m_count) \
@@ -210,7 +196,7 @@ T *memnew_arr_template(size_t p_elements, const char *p_dummy, const char *p_des
 
 ## Custom Allocators
 
-### Placement New Operators (`memory.hpp:43-49`)
+### Placement New Operators ([memory.hpp:43](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L43))
 
 ```cpp
 // Standard allocation
@@ -225,7 +211,7 @@ void *operator new(size_t p_size, const char *p_dummy, void *p_pointer, size_t c
 
 The `p_dummy` parameter prevents conflicts when both engine and GDExtension are built as static libraries on iOS.
 
-### Memory Implementation (`memory.cpp:36-116`)
+### Memory Implementation ([memory.cpp:36](https://github.com/godotengine/godot-cpp/blob/master/src/core/memory.cpp#L36))
 
 ```cpp
 void *Memory::alloc_static(size_t p_bytes, bool p_pad_align) {
@@ -283,7 +269,7 @@ void *Memory::realloc_static(void *p_memory, size_t p_bytes, bool p_pad_align) {
 
 ## Reference Counting
 
-### SafeRefCount Class (`safe_refcount.hpp:178-221`)
+### SafeRefCount Class ([safe_refcount.hpp:178](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/safe_refcount.hpp#L178))
 
 Thread-safe reference counting implementation:
 
@@ -317,7 +303,7 @@ public:
 };
 ```
 
-### SafeNumeric Template (`safe_refcount.hpp:47-169`)
+### SafeNumeric Template ([safe_refcount.hpp:47](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/safe_refcount.hpp#L47))
 
 Atomic wrapper for numeric types:
 
@@ -369,7 +355,7 @@ public:
 
 ### Reference Counting in Objects
 
-RefCounted integration (`ref.hpp:47-230`):
+RefCounted integration ([ref.hpp:47](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/ref.hpp#L47)):
 
 ```cpp
 template <typename T>
@@ -399,7 +385,7 @@ class Ref {
 
 ### Construction Phases
 
-#### Pre-initialization (`wrapped.hpp:129-134`)
+#### Pre-initialization ([wrapped.hpp:129](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L129))
 
 ```cpp
 template <typename T, std::enable_if_t<std::is_base_of<::godot::Wrapped, T>::value, bool> = true>
@@ -411,7 +397,7 @@ _ALWAYS_INLINE_ void _pre_initialize() {
 }
 ```
 
-#### Object Creation (`wrapped.cpp:69-91`)
+#### Object Creation ([wrapped.cpp:69](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L69))
 
 ```cpp
 Wrapped::Wrapped(const StringName &p_godot_class) {
@@ -441,7 +427,7 @@ Wrapped::Wrapped(const StringName &p_godot_class) {
 }
 ```
 
-#### Post-initialization (`wrapped.cpp:58-67`)
+#### Post-initialization ([wrapped.cpp:58](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L58))
 
 ```cpp
 void Wrapped::_postinitialize() {
@@ -458,7 +444,7 @@ void Wrapped::_postinitialize() {
 
 ### Destruction Sequence
 
-#### Object Destruction (`wrapped.hpp:382-388`)
+#### Object Destruction ([wrapped.hpp:382](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/classes/wrapped.hpp#L382))
 
 ```cpp
 static void free(void * /*data*/, GDExtensionClassInstancePtr ptr) {
@@ -470,7 +456,7 @@ static void free(void * /*data*/, GDExtensionClassInstancePtr ptr) {
 }
 ```
 
-#### Engine Object Cleanup (`memory.hpp:115`)
+#### Engine Object Cleanup ([memory.hpp:115](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L115))
 
 ```cpp
 // For Wrapped objects
@@ -508,7 +494,7 @@ godot::internal::gdextension_interface_object_destroy(p_class->_owner);
 
 ### Cross-Binary Transfer
 
-#### Object Creation (`wrapped.cpp:77`)
+#### Object Creation ([wrapped.cpp:77](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L77))
 
 ```cpp
 // Engine allocates and owns the GodotObject
@@ -517,7 +503,7 @@ _owner = godot::internal::gdextension_interface_classdb_construct_object2(
 );
 ```
 
-#### Object Destruction (`memory.hpp:115`)
+#### Object Destruction ([memory.hpp:115](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L115))
 
 ```cpp
 // Engine deallocates its object
@@ -534,7 +520,7 @@ godot::internal::gdextension_interface_object_destroy(p_class->_owner);
 
 ## COW Data Structures
 
-### CowData Template (`cowdata.hpp:47-409`)
+### CowData Template ([cowdata.hpp:47](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/cowdata.hpp#L47))
 
 Copy-on-write container implementation:
 
@@ -563,7 +549,7 @@ private:
 
 ### Copy-on-Write Mechanism
 
-#### _copy_on_write() Method (`cowdata.hpp:307-344`)
+#### _copy_on_write() Method ([cowdata.hpp:307](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/cowdata.hpp#L307))
 
 ```cpp
 typename CowData<T>::USize CowData<T>::_copy_on_write() {
@@ -609,19 +595,19 @@ typename CowData<T>::USize CowData<T>::_copy_on_write() {
 
 ### Reference Sharing
 
-#### Copy Constructor (`cowdata.hpp:265`)
+#### Copy Constructor ([cowdata.hpp:265](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/cowdata.hpp#L265))
 
 ```cpp
 CowData(const CowData<T> &p_from) { _ref(p_from); }
 ```
 
-#### Assignment Operator (`cowdata.hpp:180`)
+#### Assignment Operator ([cowdata.hpp:180](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/cowdata.hpp#L180))
 
 ```cpp
 void operator=(const CowData<T> &p_from) { _ref(p_from); }
 ```
 
-#### Move Semantics (`cowdata.hpp:181-189, 266-269`)
+#### Move Semantics ([cowdata.hpp:181](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/cowdata.hpp#L181), 266-269`)
 
 ```cpp
 void operator=(CowData<T> &&p_from) {
@@ -659,7 +645,7 @@ struct alignas(16) AlignedData {
 };
 ```
 
-#### Allocation Alignment (`memory.hpp:143-173`)
+#### Allocation Alignment ([memory.hpp:143](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/memory.hpp#L143))
 
 ```cpp
 template <typename T>
@@ -741,7 +727,7 @@ static thread_local ObjectID _constructing_id;
 
 ### Debug Mode Tracking
 
-Memory usage statistics (`memory.cpp:96-116`):
+Memory usage statistics ([memory.cpp:96](https://github.com/godotengine/godot-cpp/blob/master/src/core/memory.cpp#L96)):
 
 ```cpp
 uint64_t Memory::get_mem_available() {

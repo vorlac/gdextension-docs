@@ -1,20 +1,5 @@
 # Template Specializations
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [GetTypeInfo System](#gettypeinfo-system)
-3. [Type Traits and SFINAE](#type-traits-and-sfinae)
-4. [VariantCaster Templates](#variantcaster-templates)
-5. [PtrToArg Marshalling System](#ptrtoarg-marshalling-system)
-6. [Method Call Dispatch](#method-call-dispatch)
-7. [Reference Type Handling](#reference-type-handling)
-8. [Container Specializations](#container-specializations)
-9. [Hash Function Templates](#hash-function-templates)
-10. [Cross-Binary Type Safety](#cross-binary-type-safety)
-11. [Compile-Time Validation](#compile-time-validation)
-12. [Performance Optimizations](#performance-optimizations)
-
 ## Overview
 
 The template specialization system in godot-cpp provides compile-time type safety and efficient cross-binary marshalling through extensive use of C++ template metaprogramming. This system bridges the gap between C++'s static type system and Godot's dynamic variant-based system.
@@ -31,7 +16,7 @@ The template specialization system in godot-cpp provides compile-time type safet
 
 ### Core Template Definition
 
-The foundation of type introspection (`type_info.hpp:103-104`):
+The foundation of type introspection ([type_info.hpp:103](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L103)):
 
 ```cpp
 template <typename T, typename = void>
@@ -59,7 +44,7 @@ struct GetTypeInfo<SpecificType> {
 
 ### `MAKE_TYPE_INFO` Macros
 
-#### Basic Type Registration (`type_info.hpp:106-122`)
+#### Basic Type Registration ([type_info.hpp:106](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L106))
 
 ```cpp
 #define MAKE_TYPE_INFO(m_type, m_var_type) \
@@ -74,7 +59,7 @@ struct GetTypeInfo<SpecificType> {
     };
 ```
 
-#### Type with Metadata (`type_info.hpp:124-140`)
+#### Type with Metadata ([type_info.hpp:124](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L124))
 
 ```cpp
 #define MAKE_TYPE_INFO_WITH_META(m_type, m_var_type, m_metadata) \
@@ -90,7 +75,7 @@ struct GetTypeInfo<SpecificType> {
 
 ### Built-in Type Specializations
 
-#### Primitive Types (`type_info.hpp:142-151`)
+#### Primitive Types ([type_info.hpp:142](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L142))
 
 ```cpp
 MAKE_TYPE_INFO(bool, GDEXTENSION_VARIANT_TYPE_BOOL)
@@ -111,7 +96,7 @@ MAKE_TYPE_INFO_WITH_META(uint64_t, GDEXTENSION_VARIANT_TYPE_INT,
 MAKE_TYPE_INFO(int64_t, GDEXTENSION_VARIANT_TYPE_INT)
 ```
 
-#### Mathematical Types (`type_info.hpp:152-174`)
+#### Mathematical Types ([type_info.hpp:152](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L152))
 
 ```cpp
 MAKE_TYPE_INFO(float, GDEXTENSION_VARIANT_TYPE_FLOAT)
@@ -134,7 +119,7 @@ MAKE_TYPE_INFO(Projection, GDEXTENSION_VARIANT_TYPE_PROJECTION)
 
 ### Object Pointer Specialization
 
-SFINAE-based specialization for Object-derived pointers (`type_info.hpp:210-226`):
+SFINAE-based specialization for Object-derived pointers ([type_info.hpp:210](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L210)):
 
 ```cpp
 template <typename T>
@@ -164,7 +149,7 @@ struct GetTypeInfo<const T *,
 
 ### Enum Support System
 
-#### Enum Type Registration (`type_info.hpp:237-252`)
+#### Enum Type Registration ([type_info.hpp:237](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L237))
 
 ```cpp
 #define MAKE_ENUM_TYPE_INFO(m_enum) \
@@ -187,7 +172,7 @@ struct GetTypeInfo<const T *,
     };
 ```
 
-### BitField Template (`type_info.hpp:275-299`)
+### BitField Template ([type_info.hpp:275](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L275))
 
 ```cpp
 template <typename T>
@@ -220,7 +205,7 @@ public:
 
 ### TypedArray Specializations
 
-#### Generic TypedArray (`type_info.hpp:330-343`)
+#### Generic TypedArray ([type_info.hpp:330](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L330))
 
 ```cpp
 template <typename T>
@@ -241,7 +226,7 @@ struct GetTypeInfo<TypedArray<T>> {
 };
 ```
 
-#### Built-in TypedArray Specializations (`type_info.hpp:359-409`)
+#### Built-in TypedArray Specializations ([type_info.hpp:359](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L359))
 
 ```cpp
 #define MAKE_TYPED_ARRAY_INFO(m_type, m_variant_type) \
@@ -270,7 +255,7 @@ MAKE_TYPED_ARRAY_INFO(String, Variant::STRING)
 
 ## Type Traits and SFINAE
 
-### Type Inheritance Detection (`type_info.hpp:71-80`)
+### Type Inheritance Detection ([type_info.hpp:71](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L71))
 
 ```cpp
 template <typename B, typename D>
@@ -286,7 +271,7 @@ struct TypeInherits {
 };
 ```
 
-### EnableIf Implementation (`type_info.hpp:42-49`)
+### EnableIf Implementation ([type_info.hpp:42](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L42))
 
 ```cpp
 template <bool C, typename T = void>
@@ -300,7 +285,7 @@ struct EnableIf<false, T> {
 };
 ```
 
-### Type Comparison (`type_info.hpp:51-59`)
+### Type Comparison ([type_info.hpp:51](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L51))
 
 ```cpp
 template <typename, typename>
@@ -314,7 +299,7 @@ struct TypesAreSame<A, A> {
 };
 ```
 
-### Function Comparison (`type_info.hpp:61-69`)
+### Function Comparison ([type_info.hpp:61](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/type_info.hpp#L61))
 
 ```cpp
 template <auto A, auto B>
@@ -330,7 +315,7 @@ struct FunctionsAreSame<A, A> {
 
 ## VariantCaster Templates
 
-### Base Template (`binder_common.hpp:86-96`)
+### Base Template ([binder_common.hpp:86](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L86))
 
 ```cpp
 template <typename T>
@@ -348,7 +333,7 @@ struct VariantCaster {
 };
 ```
 
-### Reference Specializations (`binder_common.hpp:98-120`)
+### Reference Specializations ([binder_common.hpp:98](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L98))
 
 ```cpp
 template <typename T>
@@ -376,7 +361,7 @@ struct VariantCaster<const T &> {
 };
 ```
 
-### Object Class Checker (`binder_common.hpp:122-145`)
+### Object Class Checker ([binder_common.hpp:122](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L122))
 
 ```cpp
 template <typename T>
@@ -403,7 +388,7 @@ struct VariantObjectClassChecker<const Ref<T> &> {
 };
 ```
 
-### Validation and Casting (`binder_common.hpp:147-190`)
+### Validation and Casting ([binder_common.hpp:147](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L147))
 
 ```cpp
 template <typename T>
@@ -429,7 +414,7 @@ struct VariantCasterAndValidate {
 };
 ```
 
-### Enum Casting Macro (`binder_common.hpp:44-84`)
+### Enum Casting Macro ([binder_common.hpp:44](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L44))
 
 ```cpp
 #define VARIANT_ENUM_CAST(m_enum) \
@@ -456,14 +441,14 @@ namespace godot { \
 
 ## PtrToArg Marshalling System
 
-### Base Template (`method_ptrcall.hpp:41-42`)
+### Base Template ([method_ptrcall.hpp:41](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_ptrcall.hpp#L41))
 
 ```cpp
 template <typename T>
 struct PtrToArg {};  // Primary template is empty
 ```
 
-### Basic Type Marshalling (`method_ptrcall.hpp:44-62`)
+### Basic Type Marshalling ([method_ptrcall.hpp:44](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_ptrcall.hpp#L44))
 
 ```cpp
 #define MAKE_PTRARG(m_type) \
@@ -489,7 +474,7 @@ MAKE_PTRARG(float)
 MAKE_PTRARG(double)
 ```
 
-### Type Conversion Marshalling (`method_ptrcall.hpp:64-114`)
+### Type Conversion Marshalling ([method_ptrcall.hpp:64](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_ptrcall.hpp#L64))
 
 ```cpp
 #define MAKE_PTRARGCONV(m_type, m_conv) \
@@ -512,7 +497,7 @@ MAKE_PTRARGCONV(uint32_t, int64_t)
 MAKE_PTRARGCONV(int32_t, int64_t)
 ```
 
-### Object Pointer Marshalling (`method_ptrcall.hpp:172-194`)
+### Object Pointer Marshalling ([method_ptrcall.hpp:172](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_ptrcall.hpp#L172))
 
 ```cpp
 template <typename T>
@@ -540,7 +525,7 @@ struct PtrToArg<T *> {
 };
 ```
 
-### Native Pointer Support (`method_ptrcall.hpp:197-237`)
+### Native Pointer Support ([method_ptrcall.hpp:197](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/method_ptrcall.hpp#L197))
 
 ```cpp
 #define GDVIRTUAL_NATIVE_PTR(m_type) \
@@ -565,7 +550,7 @@ GDVIRTUAL_NATIVE_PTR(char)
 
 ## Method Call Dispatch
 
-### Index Sequence Generation (`defs.hpp:300-307`)
+### Index Sequence Generation ([defs.hpp:300](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/defs.hpp#L300))
 
 ```cpp
 template <size_t... Is>
@@ -578,7 +563,7 @@ template <size_t... Is>
 struct BuildIndexSequence<0, Is...> : IndexSequence<Is...> {};
 ```
 
-### Variadic Method Call (`binder_common.hpp:192-230`)
+### Variadic Method Call ([binder_common.hpp:192](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L192))
 
 ```cpp
 // Non-const method, no return
@@ -611,7 +596,7 @@ void call_with_ptr_args_ret_helper(T *p_instance,
 }
 ```
 
-### Static Method Dispatch (`binder_common.hpp:268-306`)
+### Static Method Dispatch ([binder_common.hpp:268](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L268))
 
 ```cpp
 template <typename... P, size_t... Is>
@@ -630,7 +615,7 @@ void call_with_ptr_args_static_ret_helper(R (*p_method)(P...),
 }
 ```
 
-### Argument Type Extraction (`binder_common.hpp:480-537`)
+### Argument Type Extraction ([binder_common.hpp:480](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/core/binder_common.hpp#L480))
 
 ```cpp
 template <typename Q>
@@ -658,7 +643,7 @@ GDExtensionVariantType call_get_argument_type(int p_arg) {
 
 ## Reference Type Handling
 
-### Ref<T> Template Core (`ref.hpp:47-230`)
+### Ref<T> Template Core ([ref.hpp:47](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/ref.hpp#L47))
 
 ```cpp
 template <typename T>
@@ -701,7 +686,7 @@ public:
 };
 ```
 
-### Ref<T> PtrToArg Specialization (`ref.hpp:232-267`)
+### Ref<T> PtrToArg Specialization ([ref.hpp:232](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/ref.hpp#L232))
 
 ```cpp
 template <typename T>
@@ -737,7 +722,7 @@ struct PtrToArg<Ref<T>> {
 };
 ```
 
-### Ref<T> GetTypeInfo Specialization (`ref.hpp:269-287`)
+### Ref<T> GetTypeInfo Specialization ([ref.hpp:269](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/templates/ref.hpp#L269))
 
 ```cpp
 template <typename T>
@@ -762,7 +747,7 @@ struct GetTypeInfo<Ref<T>,
 
 ## Container Specializations
 
-### TypedArray Implementation (`typed_array.hpp:42-280`)
+### TypedArray Implementation ([typed_array.hpp:42](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/typed_array.hpp#L42))
 
 ```cpp
 template <typename T>
@@ -800,7 +785,7 @@ public:
 };
 ```
 
-### TypedDictionary System (`typed_dictionary.hpp:40-465`)
+### TypedDictionary System ([typed_dictionary.hpp:40](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/typed_dictionary.hpp#L40))
 
 Extensive macro-based specialization for all type combinations:
 
@@ -826,7 +811,7 @@ public: \
 
 ## Hash Function Templates
 
-### HashMapHasherDefault (`hashfuncs.hpp:314-408`)
+### HashMapHasherDefault ([hashfuncs.hpp:314](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/hashfuncs.hpp#L314))
 
 ```cpp
 struct HashMapHasherDefault {
@@ -877,7 +862,7 @@ struct HashMapHasherDefault {
 };
 ```
 
-### Specialized Comparators (`hashfuncs.hpp:418-538`)
+### Specialized Comparators ([hashfuncs.hpp:418](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/hashfuncs.hpp#L418))
 
 ```cpp
 // Float comparison with NaN handling
@@ -909,7 +894,7 @@ struct HashMapComparatorDefault<Vector2> {
 
 ## Cross-Binary Type Safety
 
-### Variant Internal Type Mapping (`variant_internal.hpp:40-473`)
+### Variant Internal Type Mapping ([variant_internal.hpp:40](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant_internal.hpp#L40))
 
 ```cpp
 template <typename T>
@@ -934,7 +919,7 @@ struct VariantInternalType<double> {
 // ... specializations for all 40 variant types
 ```
 
-### Internal Value Access (`variant_internal.hpp:474-505`)
+### Internal Value Access ([variant_internal.hpp:474](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/variant/variant_internal.hpp#L474))
 
 ```cpp
 template <typename T>

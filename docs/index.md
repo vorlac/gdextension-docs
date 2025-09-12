@@ -1,4 +1,4 @@
-# Godot GDExtension Unofficial Technical Documentation
+# GDExtension (godot-cpp) Developer Documentation
 
 This comprehensive technical documentation provides deep insights into godot-cpp, the C++ bindings for Godot Engine's GDExtension API. The documentation covers everything from getting started to advanced internal implementation details.
 

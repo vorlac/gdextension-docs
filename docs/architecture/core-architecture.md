@@ -1,20 +1,5 @@
 # Core Architecture
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Binary Communication System](#binary-communication-system)
-3. [Function Pointer Architecture](#function-pointer-architecture)
-4. [Interface Versioning](#interface-versioning)
-5. [Initialization Architecture](#initialization-architecture)
-6. [Memory Boundaries](#memory-boundaries)
-7. [Data Marshalling](#data-marshalling)
-8. [Callback System](#callback-system)
-9. [Error Handling Across Boundaries](#error-handling-across-boundaries)
-10. [Platform Considerations](#platform-considerations)
-11. [Performance Characteristics](#performance-characteristics)
-12. [Implementation Examples](#implementation-examples)
-
 ## Overview
 
 The godot-cpp core architecture provides a sophisticated binary communication layer between C++ extensions and the Godot engine. This system uses a C-compatible ABI with function pointer tables, versioned interfaces, and careful memory management to ensure stability and performance.
@@ -44,7 +29,8 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 graph LR
     subgraph EXT["C++ Extension"]
@@ -79,7 +65,7 @@ graph LR
 
 The entire communication system is built on a C-compatible interface with opaque pointers and function tables.
 
-#### Core Pointer Types (`gdextension_interface.h:159-180`)
+#### Core Pointer Types ([gdextension_interface.h:159](https://github.com/godotengine/godot/blob/master/core/extension/gdextension_interface.h#L159))
 
 | Type Category | Pointer Type | Description | Usage |
 |--------------|--------------|-------------|-------|
@@ -133,7 +119,7 @@ typedef uint64_t GDObjectInstanceID;  // Unique object identifier
 typedef void *GDExtensionClassInstancePtr;  // Your C++ class instance
 ```
 
-### Internal Namespace Structure (`godot.hpp:39-213`)
+### Internal Namespace Structure ([godot.hpp:39](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/godot.hpp#L39))
 
 The `internal` namespace contains the complete function pointer table.
 
@@ -192,7 +178,7 @@ namespace internal {
 
 Function pointers are resolved using a systematic macro-based approach.
 
-#### LOAD_PROC_ADDRESS Macro (`godot.cpp:254-259`)
+#### LOAD_PROC_ADDRESS Macro ([godot.cpp:254](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L254))
 
 > **Usage Tip**: This macro is the cornerstone of interface loading. It performs three critical operations: (1) resolves the function by name from the engine, (2) casts it to the correct function pointer type, and (3) validates the pointer is non-null. If any function fails to load, the entire extension initialization aborts, preventing runtime crashes from missing functions.
 
@@ -205,7 +191,7 @@ Function pointers are resolved using a systematic macro-based approach.
     }
 ```
 
-### Initialization Order (`godot.cpp:301-498`)
+### Initialization Order ([godot.cpp:301](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L301))
 
 The function pointer resolution follows a critical order:
 
@@ -328,7 +314,7 @@ if (!internal::gdextension_interface_##m_name) {
 
 ## Interface Versioning
 
-### Version Structure (`gdextension_interface.h:241-247`)
+### Version Structure ([gdextension_interface.h:241](https://github.com/godotengine/godot/blob/master/core/extension/gdextension_interface.h#L241))
 
 > **Version Strategy**: GDExtensionGodotVersion2 supports forward compatibility through structure extension. New fields can be added at the end without breaking existing extensions. Always check the engine version before accessing newer fields to avoid memory access violations.
 
@@ -342,7 +328,7 @@ typedef struct {
 } GDExtensionGodotVersion2;
 ```
 
-### Version Negotiation (`godot.cpp:314-338`)
+### Version Negotiation ([godot.cpp:314](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L314))
 
 | Compatibility Rule | Description | Example |
 |-------------------|-------------|----------|
@@ -382,7 +368,7 @@ bool GDExtensionBinding::init(GDExtensionInterfaceGetProcAddress p_get_proc_addr
 }
 ```
 
-### Legacy Interface Detection (`godot.cpp:261-298`)
+### Legacy Interface Detection ([godot.cpp:261](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L261))
 
 The system can detect and reject legacy interfaces:
 
@@ -428,7 +414,8 @@ config:
         primaryBorderColor: '#6a6f77ff'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#262B33'
+        edgeLabelBackground: '#121212'
+        tertiaryTextColor: '#C1C4CA'
 ---
 graph LR
     subgraph STABLE["ABI Stable"]
@@ -496,7 +483,7 @@ GDExtensionBool GDE_EXPORT example_library_init(
 }
 ```
 
-### GDExtensionInitialization Structure (`gdextension_interface.h:745-754`)
+### GDExtensionInitialization Structure ([gdextension_interface.h:745](https://github.com/godotengine/godot/blob/master/core/extension/gdextension_interface.h#L745))
 
 ```c
 typedef struct {
@@ -514,7 +501,7 @@ typedef struct {
 } GDExtensionInitialization;
 ```
 
-### Initialization Levels (`gdextension_interface.h:735-740`)
+### Initialization Levels ([gdextension_interface.h:735](https://github.com/godotengine/godot/blob/master/core/extension/gdextension_interface.h#L735))
 
 ```c
 typedef enum {
@@ -526,7 +513,7 @@ typedef enum {
 } GDExtensionInitializationLevel;
 ```
 
-### Initialization Callback System (`godot.cpp:515-541`)
+### Initialization Callback System ([godot.cpp:515](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L515))
 
 ```cpp
 void GDExtensionBinding::initialize_level(void *p_userdata,
@@ -555,7 +542,7 @@ void GDExtensionBinding::initialize_level(void *p_userdata,
 }
 ```
 
-### InitData Management (`godot.cpp:222-252`)
+### InitData Management ([godot.cpp:222](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L222))
 
 ```cpp
 class InitData {
@@ -595,7 +582,7 @@ public:
 All memory crossing the binary boundary uses engine allocators:
 
 ```cpp
-// Engine-provided allocators (godot.hpp:47-50)
+// Engine-provided allocators ([godot.hpp:47](https://github.com/godotengine/godot-cpp/blob/master/include/godot_cpp/godot.hpp#L47))
 extern "C" GDExtensionInterfaceMemAlloc gdextension_interface_mem_alloc;
 extern "C" GDExtensionInterfaceMemRealloc gdextension_interface_mem_realloc;
 extern "C" GDExtensionInterfaceMemFree gdextension_interface_mem_free;
@@ -649,7 +636,7 @@ const char *get_utf8(GDExtensionConstStringPtr str) {
 The Variant system serves as the primary data marshalling mechanism:
 
 ```cpp
-// Type constructors for marshalling (variant.cpp:44-52)
+// Type constructors for marshalling ([variant.cpp:44](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L44))
 GDExtensionVariantFromTypeConstructorFunc from_type_constructor[Variant::VARIANT_MAX]{};
 GDExtensionTypeFromVariantConstructorFunc to_type_constructor[Variant::VARIANT_MAX]{};
 
@@ -673,7 +660,7 @@ void Variant::init_bindings() {
 Method calls use Variant arrays for arguments:
 
 ```cpp
-// Calling a variant method (variant.cpp:580-591)
+// Calling a variant method ([variant.cpp:580](https://github.com/godotengine/godot-cpp/blob/master/src/variant/variant.cpp#L580))
 Variant Variant::call(const StringName &method, const Variant **args, int argcount,
                       GDExtensionCallError &r_error) const {
     Variant ret;
@@ -694,7 +681,7 @@ Variant Variant::call(const StringName &method, const Variant **args, int argcou
 Objects are bound to C++ instances through the instance binding system:
 
 ```cpp
-// Setting instance binding (wrapped.cpp:81-89)
+// Setting instance binding ([wrapped.cpp:81](https://github.com/godotengine/godot-cpp/blob/master/src/classes/wrapped.cpp#L81))
 internal::gdextension_interface_object_set_instance(
     _owner,                     // Engine object
     reinterpret_cast<GDExtensionConstStringNamePtr>(p_godot_class._native_ptr()),
@@ -717,7 +704,7 @@ The engine calls back into extensions through registered callbacks:
 
 #### Initialization/Deinitialization Callbacks
 ```cpp
-// Registration (godot.cpp:500-503)
+// Registration ([godot.cpp:500](https://github.com/godotengine/godot-cpp/blob/master/src/godot.cpp#L500))
 r_initialization->initialize = initialize_level;
 r_initialization->deinitialize = deinitialize_level;
 r_initialization->minimum_initialization_level = minimum_level;
@@ -726,7 +713,7 @@ r_initialization->userdata = p_init_data;
 
 #### Virtual Method Callbacks
 ```cpp
-// Virtual method resolution (class_db.cpp:288-312)
+// Virtual method resolution ([class_db.cpp:288](https://github.com/godotengine/godot-cpp/blob/master/src/core/class_db.cpp#L288))
 GDExtensionClassCallVirtual ClassDB::get_virtual_func(void *p_userdata,
                                                       GDExtensionConstStringNamePtr p_name,
                                                       uint32_t p_hash) {
@@ -784,7 +771,7 @@ typedef struct {
 Error messages cross boundaries through dedicated functions:
 
 ```cpp
-// Error printing (error_macros.cpp:40-46)
+// Error printing ([error_macros.cpp:40](https://github.com/godotengine/godot-cpp/blob/master/src/core/error_macros.cpp#L40))
 void _err_print_error(const char *p_function, const char *p_file, int p_line,
                      const char *p_error, bool p_editor_notify, bool p_is_warning) {
     if (p_is_warning) {
