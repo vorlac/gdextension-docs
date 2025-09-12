@@ -150,7 +150,7 @@ pre {
   background-color: #161b22;
   border-radius: 6px;
   margin-bottom: 16px;
-  border: 1px solid var(--color-border-muted);
+  border: 1px solid #30363d;
 }
 
 code {
@@ -183,8 +183,8 @@ pre code {
 }
 
 .highlight pre {
-  background-color: #161b22;
-  border: 1px solid var(--color-border-muted);
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
 }
 
 /* Base text color */
