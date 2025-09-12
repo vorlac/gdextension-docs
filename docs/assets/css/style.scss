@@ -147,7 +147,7 @@ pre {
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  background-color: #161b22;
+  background-color: #161b22; /* Dark background for contrast */
   border-radius: 6px;
   margin-bottom: 16px;
   border: 1px solid #30363d;
@@ -158,7 +158,7 @@ code {
   margin: 0;
   font-size: 85%;
   white-space: break-spaces;
-  background-color: rgba(110,118,129,0.4);
+  background-color: #161b22; /* Match code block background */
   border-radius: 6px;
   font-family: ui-monospace,SFMono-Regular,"SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
 }
@@ -178,15 +178,15 @@ pre code {
 
 /* OneDark Muted Theme for Rouge Syntax Highlighting */
 .highlight {
-  background-color: #282C34 !important;
+  background-color: #161b22 !important; /* Darker background like GitHub */
   color: #C1C4CA !important;
   border-radius: 8px;
   padding: 1em;
 }
 
 .highlight pre {
-  background-color: #282C34 !important;
-  border: 1px solid #21252B !important;
+  background-color: #161b22 !important; /* Darker background for better contrast */
+  border: 1px solid #30363d !important; /* Slightly lighter border */
   color: #C1C4CA !important;
   margin: 0;
   padding: 0;
