@@ -429,5 +429,43 @@
         elem.style.color = '#DCB4B4'; // Pink like operators
       }
     });
+    
+    // Fix Rouge parsing failures - sometimes it stops highlighting mid-block
+    // Look for common C++ keywords that aren't highlighted
+    document.querySelectorAll('.highlight').forEach(function(block) {
+      // Get all text nodes that might be unhighlighted
+      var walker = document.createTreeWalker(
+        block,
+        NodeFilter.SHOW_TEXT,
+        null,
+        false
+      );
+      
+      var node;
+      while (node = walker.nextNode()) {
+        var text = node.textContent;
+        var parent = node.parentElement;
+        
+        // Skip if already has a class (already highlighted)
+        if (parent && parent.className) continue;
+        
+        // Check for keywords that should be highlighted
+        if (/\b(void|int|bool|char|const|if|else|return|false|true|nullptr)\b/.test(text)) {
+          // Wrap keywords in spans with appropriate classes
+          var html = text
+            .replace(/\b(void|int|bool|char|int64_t|int32_t|uint64_t|uint32_t|size_t)\b/g, '<span style="color: #99B7D7">$1</span>') // Types
+            .replace(/\b(const|static|extern|inline|virtual|override|final)\b/g, '<span style="color: #DCB4B4">$1</span>') // Keywords
+            .replace(/\b(if|else|for|while|do|switch|case|return|break|continue)\b/g, '<span style="color: #DCB4B4">$1</span>') // Control
+            .replace(/\b(true|false|nullptr)\b/g, '<span style="color: #CAB880">$1</span>') // Constants
+            .replace(/\b(String|Vector|Array|Dictionary)\b/g, '<span style="color: #99B7D7">$1</span>'); // Common types
+          
+          if (html !== text) {
+            var temp = document.createElement('span');
+            temp.innerHTML = html;
+            parent.replaceChild(temp, node);
+          }
+        }
+      }
+    });
   });
 </script>

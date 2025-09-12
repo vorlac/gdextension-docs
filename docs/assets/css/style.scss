@@ -319,6 +319,17 @@ pre code {
   background: none !important;
 }
 
+/* Fix for text that Rouge fails to parse */
+.highlight {
+  /* Ensure all direct text has proper color */
+  color: #C1C4CA !important;
+  
+  /* Common patterns Rouge misses */
+  span:not([class]) {
+    color: #C1C4CA; /* Default text color for unclassed spans */
+  }
+}
+
 /* Operators should be pink including :: */
 .highlight .o { color: #DCB4B4 !important }
 .highlight .p::before { content: ''; } /* Ensure :: is treated as operator */
