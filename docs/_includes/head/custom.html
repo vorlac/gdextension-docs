@@ -1,5 +1,5 @@
 <!-- Prism.js for syntax highlighting -->
-<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<!-- Removed default theme, using custom Tomorrow Night theme below -->
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
 
@@ -25,40 +25,264 @@
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
 
 <style>
-  /* Custom styles for better integration with dark theme */
+  /* Tomorrow Night Theme for Prism.js */
+  /* Based on https://github.com/chriskempson/tomorrow-theme */
+  
+  /* Main code block styling */
+  code[class*="language-"],
   pre[class*="language-"] {
-    background: #1e1e1e;
-    border: 1px solid #3a3f47;
-    border-radius: 8px;
-    margin: 1.5em 0;
+    color: #c5c8c6; /* Foreground */
+    background: none;
+    font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 0.95em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    tab-size: 4;
+    hyphens: none;
   }
   
-  code[class*="language-"] {
-    font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-    font-size: 0.95em;
+  /* Code blocks */
+  pre[class*="language-"] {
+    background: #1d1f21; /* Tomorrow Night Background */
+    border: 1px solid #282a2e; /* Current Line color for border */
+    border-radius: 8px;
+    margin: 1.5em 0;
+    padding: 1em;
+    overflow: auto;
+  }
+  
+  /* Inline code */
+  :not(pre) > code[class*="language-"] {
+    background: #282a2e; /* Current Line color */
+    padding: 0.1em 0.3em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+  
+  /* Selection */
+  pre[class*="language-"]::-moz-selection,
+  pre[class*="language-"] ::-moz-selection,
+  code[class*="language-"]::-moz-selection,
+  code[class*="language-"] ::-moz-selection {
+    background: #373b41; /* Selection color */
+    color: inherit;
+  }
+  
+  pre[class*="language-"]::selection,
+  pre[class*="language-"] ::selection,
+  code[class*="language-"]::selection,
+  code[class*="language-"] ::selection {
+    background: #373b41; /* Selection color */
+    color: inherit;
+  }
+  
+  /* Tomorrow Night Syntax Highlighting */
+  
+  /* Comments */
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: #969896;
+  }
+  
+  /* Punctuation */
+  .token.punctuation {
+    color: #c5c8c6;
+  }
+  
+  /* Namespace */
+  .token.namespace {
+    opacity: 0.7;
+  }
+  
+  /* Properties, tags, symbols, constants */
+  .token.property,
+  .token.tag,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    color: #cc6666; /* Red */
+  }
+  
+  /* Boolean, numbers */
+  .token.boolean,
+  .token.number {
+    color: #de935f; /* Orange */
+  }
+  
+  /* Selectors, attributes, strings, chars */
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
+  .token.inserted {
+    color: #b5bd68; /* Green */
+  }
+  
+  /* Operators, entity, URLs */
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    color: #8abeb7; /* Aqua */
+  }
+  
+  /* Atrules, attr-values, keywords, control, directive, unit */
+  .token.atrule,
+  .token.attr-value,
+  .token.keyword,
+  .token.control,
+  .token.directive,
+  .token.unit {
+    color: #b294bb; /* Purple */
+  }
+  
+  /* Functions, methods */
+  .token.function,
+  .token.method,
+  .token.regex {
+    color: #81a2be; /* Blue */
+  }
+  
+  /* Class names */
+  .token.class-name {
+    color: #f0c674; /* Yellow */
+  }
+  
+  /* Variables */
+  .token.variable {
+    color: #cc6666; /* Red */
+  }
+  
+  /* Important, bold */
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+  
+  /* Italic */
+  .token.italic {
+    font-style: italic;
+  }
+  
+  /* Entity */
+  .token.entity {
+    cursor: help;
+  }
+  
+  /* Line highlighting */
+  .line-highlight {
+    background: #282a2e; /* Current Line */
+    background: linear-gradient(to right, #282a2e 70%, #373b41);
   }
   
   /* Line numbers styling */
   .line-numbers .line-numbers-rows {
-    border-right: 1px solid #3a3f47;
+    border-right: 1px solid #373b41;
+  }
+  
+  .line-numbers-rows > span:before {
+    color: #969896; /* Comment color for line numbers */
   }
   
   /* Toolbar styling */
+  div.code-toolbar {
+    position: relative;
+  }
+  
   div.code-toolbar > .toolbar {
-    opacity: 0.8;
+    position: absolute;
+    top: 0.3em;
+    right: 0.2em;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  div.code-toolbar:hover > .toolbar {
+    opacity: 1;
+  }
+  
+  div.code-toolbar > .toolbar > .toolbar-item {
+    display: inline-block;
   }
   
   div.code-toolbar > .toolbar > .toolbar-item > button {
-    background: #2b4268;
-    color: #C1C4CA;
-    border: 1px solid #779DC9;
+    background: #282a2e;
+    color: #c5c8c6;
+    border: 1px solid #373b41;
     border-radius: 4px;
     padding: 0.2em 0.5em;
     font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
   
   div.code-toolbar > .toolbar > .toolbar-item > button:hover {
-    background: #425f5f;
+    background: #373b41;
+    color: #f0c674;
+    border-color: #4d5057;
+  }
+  
+  /* Language-specific adjustments */
+  
+  /* C/C++ specific */
+  .language-c .token.macro,
+  .language-cpp .token.macro {
+    color: #de935f; /* Orange for macros */
+  }
+  
+  .language-c .token.directive-hash,
+  .language-cpp .token.directive-hash {
+    color: #b294bb; /* Purple for # in directives */
+  }
+  
+  /* Python specific */
+  .language-python .token.decorator {
+    color: #f0c674; /* Yellow for decorators */
+  }
+  
+  .language-python .token.builtin {
+    color: #81a2be; /* Blue for built-in functions */
+  }
+  
+  /* GDScript specific */
+  .language-gdscript .token.annotation {
+    color: #f0c674; /* Yellow for annotations */
+  }
+  
+  .language-gdscript .token.keyword {
+    color: #b294bb; /* Purple for keywords */
+  }
+  
+  /* JSON specific */
+  .language-json .token.property {
+    color: #81a2be; /* Blue for property names */
+  }
+  
+  /* YAML specific */
+  .language-yaml .token.key {
+    color: #81a2be; /* Blue for keys */
+  }
+  
+  /* Bash specific */
+  .language-bash .token.function {
+    color: #b5bd68; /* Green for commands */
+  }
+  
+  /* Diff highlighting */
+  .token.inserted {
+    background-color: #b5bd6833;
+  }
+  
+  .token.deleted {
+    background-color: #cc666633;
   }
   
   /* Mermaid container styling */
@@ -66,15 +290,44 @@
     text-align: center;
     margin: 2em 0;
   }
+  
+  /* Inline code not in pre blocks */
+  code:not([class*="language-"]) {
+    background: #282a2e;
+    color: #c5c8c6;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  }
+  
+  /* Scrollbar styling for code blocks */
+  pre[class*="language-"]::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  
+  pre[class*="language-"]::-webkit-scrollbar-track {
+    background: #282a2e;
+    border-radius: 4px;
+  }
+  
+  pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: #4d5057;
+    border-radius: 4px;
+  }
+  
+  pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+    background: #969896;
+  }
 </style>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Initialize Mermaid with minimal global config to let diagrams control their own themes
+    // Initialize Mermaid with NO theme - rely entirely on inline styles
     mermaid.initialize({ 
       startOnLoad: false,
-      securityLevel: 'loose', // Allow inline styles from diagrams
-      theme: 'base' // Use base theme to allow custom theming
+      securityLevel: 'loose' // Allow inline styles from diagrams
     });
     
     // Process Mermaid diagrams
