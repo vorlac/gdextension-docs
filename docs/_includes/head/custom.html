@@ -1,5 +1,5 @@
 <!-- Prism.js for syntax highlighting -->
-<!-- Removed default theme, using custom Tomorrow Night theme below -->
+<!-- NO default theme - using custom Tomorrow Night theme below -->
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
 
@@ -28,11 +28,11 @@
   /* Tomorrow Night Theme for Prism.js */
   /* Based on https://github.com/chriskempson/tomorrow-theme */
   
-  /* Main code block styling */
+  /* Main code block styling - !important to override any defaults */
   code[class*="language-"],
   pre[class*="language-"] {
-    color: #c5c8c6; /* Foreground */
-    background: none;
+    color: #c5c8c6 !important; /* Foreground */
+    background: none !important;
     font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
     font-size: 0.95em;
     text-align: left;
@@ -47,8 +47,8 @@
   
   /* Code blocks */
   pre[class*="language-"] {
-    background: #1d1f21; /* Tomorrow Night Background */
-    border: 1px solid #282a2e; /* Current Line color for border */
+    background: #1d1f21 !important; /* Tomorrow Night Background */
+    border: 1px solid #282a2e !important; /* Current Line color for border */
     border-radius: 8px;
     margin: 1.5em 0;
     padding: 1em;
@@ -324,15 +324,11 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Initialize Mermaid with NO theme - rely entirely on inline styles
-    mermaid.initialize({ 
-      startOnLoad: false,
-      securityLevel: 'loose' // Allow inline styles from diagrams
-    });
+    // Don't initialize Mermaid yet - we'll do it manually
     
-    // Process Mermaid diagrams
+    // Process Mermaid diagrams first
     document.querySelectorAll('pre code.language-mermaid').forEach(function(block) {
-      // Get the text content
+      // Get the text content (includes the config block)
       var graphDefinition = block.textContent;
       
       // Create a div for mermaid
@@ -345,15 +341,36 @@
       pre.parentElement.replaceChild(mermaidDiv, pre);
     });
     
-    // Re-render mermaid diagrams
-    mermaid.init();
+    // Initialize Mermaid with absolute minimal config
+    mermaid.initialize({ 
+      startOnLoad: false,
+      securityLevel: 'loose' // Allow all inline styles and configs
+    });
     
-    // Add line numbers class to code blocks if not present
+    // Manually trigger rendering for all mermaid divs
+    mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+    
+    // Process all code blocks for Prism
     document.querySelectorAll('pre code').forEach(function(block) {
       if (!block.classList.contains('language-mermaid')) {
         var pre = block.parentElement;
+        
+        // Add line numbers class
         if (!pre.classList.contains('line-numbers')) {
           pre.classList.add('line-numbers');
+        }
+        
+        // Ensure language class exists (Rouge might not add it)
+        if (block.className === '') {
+          // Try to detect language from Rouge's highlighting-* class
+          var langClass = Array.from(block.classList).find(c => c.startsWith('highlight-'));
+          if (langClass) {
+            var lang = langClass.replace('highlight-', '');
+            block.classList.add('language-' + lang);
+          } else {
+            // Default to plaintext if no language detected
+            block.classList.add('language-plaintext');
+          }
         }
       }
     });
