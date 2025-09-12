@@ -379,5 +379,32 @@
     if (typeof Prism !== 'undefined') {
       Prism.highlightAll();
     }
+    
+    // Fix Rouge's macro highlighting for C++
+    // Find all code blocks and highlight UPPERCASE_CONSTANTS
+    document.querySelectorAll('.highlight .n').forEach(function(elem) {
+      var text = elem.textContent;
+      // Check if it's an all-caps identifier (macro/constant)
+      if (text && /^[A-Z][A-Z_0-9]*$/.test(text)) {
+        elem.style.color = '#CAB880'; // Yellow for macros
+      }
+    });
+    
+    // Fix static_cast and other C++ casts
+    document.querySelectorAll('.highlight .n').forEach(function(elem) {
+      var text = elem.textContent;
+      if (text && (text === 'static_cast' || text === 'dynamic_cast' || 
+                   text === 'const_cast' || text === 'reinterpret_cast')) {
+        elem.style.color = '#DCB4B4'; // Pink like keywords
+      }
+    });
+    
+    // Fix common C++ keywords Rouge might miss
+    document.querySelectorAll('.highlight .n').forEach(function(elem) {
+      var text = elem.textContent;
+      if (text && (text === 'nullptr' || text === 'constexpr' || text === 'noexcept')) {
+        elem.style.color = '#DCB4B4'; // Pink like keywords
+      }
+    });
   });
 </script>

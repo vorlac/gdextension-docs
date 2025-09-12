@@ -193,11 +193,11 @@ pre code {
 }
 
 /* OneDark Muted Colors for Rouge */
-.highlight .err { color: #DCB4B4 } /* Error */
+.highlight .err { color: #C1C4CA } /* Error - treat as normal text */
 .highlight .g { color: #C1C4CA } /* Generic */
 .highlight .l { color: #CAB880 } /* Literal */
 .highlight .n { color: #C1C4CA } /* Name (default text) */
-.highlight .o { color: #C1C4CA } /* Operator */
+.highlight .o { color: #DCB4B4 } /* Operator */
 .highlight .x { color: #C1C4CA } /* Other */
 .highlight .p { color: #C1C4CA } /* Punctuation */
 
@@ -213,7 +213,7 @@ pre code {
 
 /* Keywords - OneDark Muted pink */
 .highlight .k { color: #DCB4B4 } /* Keyword */
-.highlight .kc { color: #C2BBE1 } /* Keyword.Constant (true/false/null) */
+.highlight .kc { color: #CAB880 } /* Keyword.Constant (true/false/null) */
 .highlight .kd { color: #DCB4B4 } /* Keyword.Declaration */
 .highlight .kn { color: #DCB4B4 } /* Keyword.Namespace */
 .highlight .kp { color: #DCB4B4 } /* Keyword.Pseudo */
@@ -247,11 +247,11 @@ pre code {
 .highlight .mx { color: #CAB880 } /* Number.Other */
 
 /* Names - OneDark Muted colors */
-.highlight .na { color: #B6C5AB } /* Name.Attribute */
-.highlight .nb { color: #C1C4CA } /* Name.Builtin */
+.highlight .na { color: #C1C4CA } /* Name.Attribute */
+.highlight .nb { color: #B6C5AB } /* Name.Builtin */
 .highlight .bp { color: #C1C4CA } /* Name.Builtin.Pseudo */
 .highlight .nc { color: #99B7D7 } /* Name.Class - blue */
-.highlight .no { color: #C2BBE1 } /* Name.Constant - purple */
+.highlight .no { color: #CAB880 } /* Name.Constant - yellow for constants/macros */
 .highlight .nd { color: #99B7D7 } /* Name.Decorator */
 .highlight .ni { color: #C1C4CA } /* Name.Entity */
 .highlight .ne { color: #99B7D7 } /* Name.Exception */
@@ -259,14 +259,14 @@ pre code {
 .highlight .fm { color: #B6C5AB } /* Name.Function.Magic */
 .highlight .nl { color: #C1C4CA } /* Name.Label */
 .highlight .nn { color: #99B7D7 } /* Name.Namespace */
-.highlight .nx { color: #B6C5AB } /* Name.Other */
+.highlight .nx { color: #C1C4CA } /* Name.Other */
 .highlight .py { color: #C1C4CA } /* Name.Property */
 .highlight .nt { color: #99B7D7 } /* Name.Tag */
 .highlight .nv { color: #C1C4CA } /* Name.Variable */
-.highlight .vc { color: #99B7D7 } /* Name.Variable.Class */
-.highlight .vg { color: #99B7D7 } /* Name.Variable.Global */
-.highlight .vi { color: #99B7D7 } /* Name.Variable.Instance */
-.highlight .vm { color: #99B7D7 } /* Name.Variable.Magic */
+.highlight .vc { color: #C1C4CA } /* Name.Variable.Class */
+.highlight .vg { color: #C1C4CA } /* Name.Variable.Global */
+.highlight .vi { color: #C1C4CA } /* Name.Variable.Instance */
+.highlight .vm { color: #C1C4CA } /* Name.Variable.Magic */
 
 /* Operators and special tokens */
 .highlight .ow { color: #DCB4B4 } /* Operator.Word */
@@ -277,38 +277,48 @@ pre code {
   color: #C1C4CA; /* Default text */
 }
 
-/* Macros (all caps identifiers, GDCLASS, D_METHOD, etc.) */
-.highlight .no { color: #C2BBE1 !important } /* Name.Constant - macros */
-.highlight .nl { color: #99B7D7 !important } /* Name.Label - sometimes used for macros */
+/* Special overrides for C++ patterns */
+/* Macros (all caps identifiers, GDCLASS, MAPUNITS_PER_DEGREE, etc.) */
+.highlight .no { color: #CAB880 !important } /* Name.Constant - macros in yellow */
+.highlight .n:has-text(/^[A-Z_]+$/) { color: #CAB880 !important } /* All caps identifiers */
 
 /* Function definitions and calls */
 .highlight .nf { color: #B6C5AB !important } /* Function names - green */
 .highlight .fm { color: #B6C5AB !important } /* Function.Magic - green */
 
-/* Classes */
+/* Classes and types */
 .highlight .nc { color: #99B7D7 !important } /* Class names - blue */
-.highlight .nn { color: #99B7D7 !important } /* Namespace names - blue when used as class prefix */
+.highlight .nn { color: #99B7D7 !important } /* Namespace names - blue */
+.highlight .kt { color: #99B7D7 !important } /* Keyword.Type - blue for types */
 
-/* Built-in types and identifiers that look like macros */
-.highlight .nb { color: #99B7D7 !important } /* Name.Builtin - for GDCLASS, etc. */
-.highlight .na { color: #B6C5AB !important } /* Name.Attribute - sometimes used for macros */
+/* Built-in functions that look like functions */
+.highlight .nb { color: #B6C5AB !important } /* Name.Builtin - green like functions */
 
-/* Make sure preprocessor directives are blue */
-.highlight .cp { color: #99B7D7 !important } /* Preprocessor directives */
-.highlight .cpf { color: #C2BBE1 !important } /* Include file paths */
+/* Preprocessor directives */
+.highlight .cp { color: #DCB4B4 !important } /* Preprocessor directives - pink like keywords */
+.highlight .cpf { color: #C2BBE1 !important } /* Include file paths - purple like strings */
 
 /* Other elements */
 .highlight .w { color: #6e7681 } /* Text.Whitespace */
 
-/* Fix for multi-line macros and backslashes */
+/* Fix for Rouge parsing issues */
 .highlight .err { 
-  color: #C1C4CA !important; /* Don't show backslashes as errors */
+  color: #C1C4CA !important; /* Don't show as errors */
   background: none !important;
 }
 
-/* Ensure line continuations aren't shown as errors */
-.highlight .o:contains("\\") {
-  color: #C1C4CA !important;
+/* Operators should be pink */
+.highlight .o { color: #DCB4B4 !important }
+
+/* Try to catch macros that Rouge misses */
+.highlight .n {
+  /* Default variables/identifiers */
+  color: #C1C4CA;
+}
+
+/* Common C++ casts and keywords Rouge might miss */
+.highlight .n[class*="cast"] {
+  color: #DCB4B4 !important;
 }
 
 /* Generic */
