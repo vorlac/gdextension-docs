@@ -70,74 +70,8 @@
   </script>
 </head>
 <body>
-  <div class="sidebar">
-    <div class="sidebar-header">
-      {% if site.logo %}
-      <img src="{{ site.logo | relative_url }}" alt="{{ site.title }}" style="max-height: 40px; margin-bottom: 10px;">
-      {% endif %}
-      <h3 style="color: var(--color-fg-default); margin: 0;">{{ site.title }}</h3>
-    </div>
-    <nav>
-      <ul>
-        <li><a href="{{ '/' | relative_url }}">Home</a></li>
-        
-        <li>
-          <strong>Getting Started</strong>
-          <ul>
-            <li><a href="{{ '/getting_started/quick-start' | relative_url }}">Quick Start</a></li>
-            <li><a href="{{ '/getting_started/basic-concepts' | relative_url }}">Basic Concepts</a></li>
-            <li><a href="{{ '/getting_started/first-extension' | relative_url }}">First Extension</a></li>
-          </ul>
-        </li>
-        
-        <li>
-          <strong>Architecture</strong>
-          <ul>
-            <li><a href="{{ '/architecture/core-architecture' | relative_url }}">Core Architecture</a></li>
-            <li><a href="{{ '/architecture/initialization' | relative_url }}">Initialization</a></li>
-            <li><a href="{{ '/architecture/memory-model' | relative_url }}">Memory Model</a></li>
-          </ul>
-        </li>
-        
-        <li>
-          <strong>Type System</strong>
-          <ul>
-            <li><a href="{{ '/type_system/variant-internals' | relative_url }}">Variant Internals</a></li>
-            <li><a href="{{ '/type_system/classdb-internals' | relative_url }}">ClassDB Internals</a></li>
-            <li><a href="{{ '/type_system/template-specializations' | relative_url }}">Template Specializations</a></li>
-          </ul>
-        </li>
-        
-        <li>
-          <strong>Engine Integration</strong>
-          <ul>
-            <li><a href="{{ '/engine_integration/binding-system' | relative_url }}">Binding System</a></li>
-            <li><a href="{{ '/engine_integration/class-registration-inheritance' | relative_url }}">Class Registration</a></li>
-            <li><a href="{{ '/engine_integration/object-resource-node' | relative_url }}">Object, Resource & Node</a></li>
-            <li><a href="{{ '/engine_integration/notification-system' | relative_url }}">Notification System</a></li>
-            <li><a href="{{ '/engine_integration/game-loop-lifecycle' | relative_url }}">Game Loop</a></li>
-            <li><a href="{{ '/engine_integration/gdscript-interaction' | relative_url }}">GDScript Interaction</a></li>
-            <li><a href="{{ '/engine_integration/singleton-interactions' | relative_url }}">Singletons</a></li>
-          </ul>
-        </li>
-        
-        <li>
-          <strong>Advanced Topics</strong>
-          <ul>
-            <li><a href="{{ '/advanced_topics/complex-patterns' | relative_url }}">Complex Patterns</a></li>
-            <li><a href="{{ '/advanced_topics/performance-optimization' | relative_url }}">Performance</a></li>
-            <li><a href="{{ '/advanced_topics/thread-safety' | relative_url }}">Thread Safety</a></li>
-            <li><a href="{{ '/advanced_topics/error-debugging' | relative_url }}">Error Handling</a></li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  
   <div class="main-content">
-    <div class="container-lg">
-      {{ content }}
-    </div>
+    {{ content }}
   </div>
 </body>
 </html>
