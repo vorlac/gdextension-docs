@@ -1,0 +1,105 @@
+docs:
+  - title: Getting Started
+    children:
+      - title: Quick Start
+        url: /getting_started/quick-start
+      - title: Basic Concepts
+        url: /getting_started/basic-concepts
+      - title: First Extension
+        url: /getting_started/first-extension
+
+  - title: Architecture
+    children:
+      - title: Core Architecture
+        url: /architecture/core-architecture
+      - title: Initialization
+        url: /architecture/initialization
+      - title: Memory Model
+        url: /architecture/memory-model
+
+  - title: Build System
+    children:
+      - title: Build Architecture
+        url: /build_system/build-architecture
+      - title: Platform Implementation
+        url: /build_system/platform-implementation
+
+  - title: Type System
+    children:
+      - title: Variant Internals
+        url: /type_system/variant-internals
+      - title: ClassDB Internals
+        url: /type_system/classdb-internals
+      - title: Template Specializations
+        url: /type_system/template-specializations
+
+  - title: Engine Integration
+    children:
+      - title: Binding System
+        url: /engine_integration/binding-system
+      - title: Class Registration & Inheritance
+        url: /engine_integration/class-registration-inheritance
+      - title: Object, Resource & Node
+        url: /engine_integration/object-resource-node
+      - title: Notification System
+        url: /engine_integration/notification-system
+      - title: Game Loop & Lifecycle
+        url: /engine_integration/game-loop-lifecycle
+      - title: GDScript Interaction
+        url: /engine_integration/gdscript-interaction
+      - title: Singleton Interactions
+        url: /engine_integration/singleton-interactions
+
+  - title: Code Generation
+    children:
+      - title: Binding Generator
+        url: /code_generation/binding-generator
+      - title: Generated Patterns
+        url: /code_generation/generated-patterns
+
+  - title: Guides
+    children:
+      - title: Creating Custom Nodes
+        url: /guides/creating-custom-nodes
+      - title: Resource Management
+        url: /guides/resource-management
+      - title: Signal Patterns
+        url: /guides/signal-patterns
+      - title: Threading Safety
+        url: /guides/threading-safety
+
+  - title: API Reference
+    children:
+      - title: Error Macros
+        url: /api_reference/error-macros
+      - title: Utility Functions
+        url: /api_reference/utility-functions
+      - title: Internal APIs
+        url: /api_reference/internal-apis
+
+  - title: Advanced Topics
+    children:
+      - title: Complex Patterns
+        url: /advanced_topics/complex-patterns
+      - title: Performance Optimization
+        url: /advanced_topics/performance-optimization
+      - title: Thread Safety
+        url: /advanced_topics/thread-safety
+      - title: Error Debugging
+        url: /advanced_topics/error-debugging
+
+  - title: Examples
+    children:
+      - title: Simple Extension
+        url: /examples/simple-extension
+      - title: Advanced Extension
+        url: /examples/advanced-extension
+      - title: Integration Extension
+        url: /examples/integration-extension
+
+  - title: Resources
+    children:
+      - title: FAQ
+        url: /resources/faq
+      - title: Glossary
+        url: /resources/glossary

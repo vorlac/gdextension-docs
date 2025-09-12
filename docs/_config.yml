@@ -1,0 +1,63 @@
+source: .
+destination: ./_site
+
+baseurl: "/gdextension-docs"
+url: "https://vorlac.github.io"
+title: GDExtension Technical Documentation
+description: Comprehensive technical documentation for Godot Engine's GDExtension C++ API
+
+remote_theme: kitian616/jekyll-TeXt-theme
+text_skin: tomorrow
+highlight_theme: tomorrow-night
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jemoji
+  - jekyll-remote-theme
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: article
+      sidebar:
+        nav: docs
+      mathjax: false
+      mathjax_autoNumber: false
+      mermaid: true
+      chart: false
+      show_edit_on_github: false
+      show_subscribe: false
+      pageview: false
+      lightbox: true
+      aside:
+        toc: true
+      show_author_profile: false
+      show_title: true
+      show_tags: false
+      show_date: false
+      sharing: false
+      comment: false
+      license: false
+
+article_header:
+  type: cover
+  theme: dark
+  background_color: '#203028'
+  background_image:
+    gradient: 'linear-gradient(135deg, rgba(34, 139, 87 , .4), rgba(139, 34, 139, .4))'
+
+data_dir: _data
