@@ -242,8 +242,8 @@ pre code {
 .highlight .mx { color: #79c0ff } /* Number.Other */
 
 /* Names and types for C++ */
-.highlight .na { color: #ffa657 } /* Name.Attribute - macros/attributes */
-.highlight .nb { color: #ffa657 } /* Name.Builtin - built-in functions/macros */
+.highlight .na { color: #c9d1d9 } /* Name.Attribute */
+.highlight .nb { color: #c9d1d9 } /* Name.Builtin */
 .highlight .bp { color: #c9d1d9 } /* Name.Builtin.Pseudo */
 .highlight .nc { color: #ffa657 } /* Name.Class - orange */
 .highlight .no { color: #79c0ff } /* Name.Constant - cyan for constants */
@@ -252,8 +252,8 @@ pre code {
 .highlight .ne { color: #ffa657 } /* Name.Exception */
 .highlight .nf { color: #d2a8ff } /* Name.Function - purple */
 .highlight .fm { color: #d2a8ff } /* Name.Function.Magic */
-.highlight .nl { color: #ffa657 } /* Name.Label - often macros in C++ */
-.highlight .nn { color: #c9d1d9 } /* Name.Namespace - default text */
+.highlight .nl { color: #c9d1d9 } /* Name.Label */
+.highlight .nn { color: #c9d1d9 } /* Name.Namespace */
 .highlight .nx { color: #c9d1d9 } /* Name.Other */
 .highlight .py { color: #c9d1d9 } /* Name.Property */
 .highlight .nt { color: #7ee83f } /* Name.Tag */
@@ -264,14 +264,29 @@ pre code {
 .highlight .vm { color: #c9d1d9 } /* Name.Variable.Magic */
 
 /* Operators and special tokens */
-.highlight .ow { color: #ff7b72; font-weight: bold } /* Operator.Word */
+.highlight .ow { color: #ff7b72; font-weight: normal } /* Operator.Word */
 
-/* Override for specific macro-like identifiers in C++ */
-/* GitHub highlights macros (all caps) and certain function calls in orange */
+/* Override for specific C++ patterns */
+/* Rouge sometimes misclassifies these, so we override */
+.highlight .n { 
+  color: #c9d1d9; /* Default text */
+}
+
+/* Macros (all caps identifiers, GDCLASS, D_METHOD, etc.) */
 .highlight .no { color: #ffa657 !important } /* Name.Constant - macros */
-.highlight .nl { color: #ffa657 !important } /* Name.Label - often macros */
-.highlight .na { color: #ffa657 !important } /* Name.Attribute - macros/attributes */
-.highlight .nb { color: #ffa657 !important } /* Name.Builtin - built-in functions/macros */
+.highlight .nl { color: #ffa657 !important } /* Name.Label - sometimes used for macros */
+
+/* Function definitions and calls */
+.highlight .nf { color: #d2a8ff !important } /* Function names - purple */
+.highlight .fm { color: #d2a8ff !important } /* Function.Magic - purple */
+
+/* Classes */
+.highlight .nc { color: #ffa657 !important } /* Class names - orange */
+.highlight .nn { color: #ffa657 !important } /* Namespace names - orange when used as class prefix */
+
+/* Built-in types and identifiers that look like macros */
+.highlight .nb { color: #ffa657 !important } /* Name.Builtin - for GDCLASS, etc. */
+.highlight .na { color: #ffa657 !important } /* Name.Attribute - sometimes used for macros */
 
 /* Make sure preprocessor directives are red */
 .highlight .cp { color: #ff7b72 !important } /* Preprocessor directives */
@@ -358,6 +373,29 @@ img {
 .mermaid {
   text-align: center;
   margin: 16px 0;
+}
+
+/* Mermaid diagram node styling */
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon {
+  fill: #1f2328 !important;
+  stroke: #3d444d !important;
+  stroke-width: 2px !important;
+}
+
+.mermaid .node text {
+  fill: #c9d1d9 !important;
+}
+
+.mermaid .flowchart-link {
+  stroke: #8b949e !important;
+}
+
+.mermaid .edgeLabel {
+  background-color: #161b22 !important;
+  color: #c9d1d9 !important;
 }
 
 /* Paragraphs */
