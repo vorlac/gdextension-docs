@@ -13,36 +13,59 @@
   <!-- Mermaid support -->
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
-    mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'dark',
-      themeVariables: {
-        darkMode: true,
-        background: '#161b22',
-        primaryColor: '#58a6ff',
-        primaryTextColor: '#c9d1d9',
-        primaryBorderColor: '#30363d',
-        lineColor: '#8b949e',
-        secondaryColor: '#1f6feb',
-        tertiaryColor: '#161b22',
-        mainBkg: '#0d1117',
-        secondBkg: '#161b22',
-        tertiaryTextColor: '#c9d1d9',
-        nodeTextColor: '#c9d1d9',
-        textColor: '#c9d1d9',
-        titleColor: '#c9d1d9',
-        labelTextColor: '#c9d1d9',
-        actorTextColor: '#c9d1d9',
-        sectionTextColor: '#c9d1d9',
-        fillType0: '#1f6feb',
-        fillType1: '#0969da',
-        fillType2: '#0860ca',
-        fillType3: '#0550ae',
-        fillType4: '#033d8b',
-        fillType5: '#0a3069',
-        fillType6: '#04264d',
-        fillType7: '#031d30'
-      }
+    document.addEventListener("DOMContentLoaded", function() {
+      mermaid.initialize({ 
+        startOnLoad: false,
+        theme: 'dark',
+        themeVariables: {
+          darkMode: true,
+          background: '#161b22',
+          primaryColor: '#58a6ff',
+          primaryTextColor: '#c9d1d9',
+          primaryBorderColor: '#30363d',
+          lineColor: '#8b949e',
+          secondaryColor: '#1f6feb',
+          tertiaryColor: '#161b22',
+          mainBkg: '#0d1117',
+          secondBkg: '#161b22',
+          tertiaryTextColor: '#c9d1d9',
+          nodeTextColor: '#c9d1d9',
+          textColor: '#c9d1d9',
+          titleColor: '#c9d1d9',
+          labelTextColor: '#c9d1d9',
+          actorTextColor: '#c9d1d9',
+          sectionTextColor: '#c9d1d9',
+          fillType0: '#1f6feb',
+          fillType1: '#0969da',
+          fillType2: '#0860ca',
+          fillType3: '#0550ae',
+          fillType4: '#033d8b',
+          fillType5: '#0a3069',
+          fillType6: '#04264d',
+          fillType7: '#031d30'
+        }
+      });
+      
+      // Convert code blocks with language-mermaid to mermaid divs
+      document.querySelectorAll('pre code.language-mermaid').forEach(function(el) {
+        // Get the mermaid code
+        var code = el.textContent;
+        
+        // Remove any config blocks
+        code = code.replace(/^---[\s\S]*?---\n/, '');
+        
+        // Create a div for mermaid
+        var mermaidDiv = document.createElement('div');
+        mermaidDiv.className = 'mermaid';
+        mermaidDiv.textContent = code;
+        
+        // Replace the pre element with the mermaid div
+        var pre = el.parentElement;
+        pre.parentElement.replaceChild(mermaidDiv, pre);
+      });
+      
+      // Render all mermaid diagrams
+      mermaid.init();
     });
   </script>
 </head>
