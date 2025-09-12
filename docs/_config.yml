@@ -6,6 +6,7 @@ url: "https://vorlac.github.io"
 title: GDExtension Technical Documentation
 description: Comprehensive technical documentation for Godot Engine's GDExtension C++ API
 lang: en
+logo: /assets/images/godot-logo.svg
 
 remote_theme: kitian616/jekyll-TeXt-theme@master
 text_skin: dark
@@ -50,7 +51,7 @@ defaults:
       aside:
         toc: true
       show_author_profile: false
-      show_title: true
+      show_title: false
       show_tags: false
       show_date: false
       sharing: false
@@ -65,6 +66,10 @@ article_header:
     gradient: 'linear-gradient(135deg, rgba(34, 139, 87 , .4), rgba(139, 34, 139, .4))'
 
 data_dir: _data
+
+sass:
+  sass_dir: _sass
+  style: compressed
 
 exclude:
   - CHANGELOG.md

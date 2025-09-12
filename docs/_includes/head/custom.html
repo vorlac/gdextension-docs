@@ -1,0 +1,38 @@
+<!-- Mermaid diagram support -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#1a1a1a',
+        primaryColor: '#bb86fc',
+        primaryTextColor: '#fff',
+        primaryBorderColor: '#6200ee',
+        lineColor: '#bb86fc',
+        secondaryColor: '#03dac6',
+        tertiaryColor: '#3700b3'
+      }
+    });
+    
+    // Find all code blocks with mermaid language
+    document.querySelectorAll('pre code.language-mermaid').forEach(function(block) {
+      // Get the text content
+      var graphDefinition = block.textContent;
+      
+      // Create a div for mermaid
+      var mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      mermaidDiv.textContent = graphDefinition;
+      
+      // Replace the pre element with the mermaid div
+      var pre = block.parentElement;
+      pre.parentElement.replaceChild(mermaidDiv, pre);
+    });
+    
+    // Re-render mermaid diagrams
+    mermaid.init();
+  });
+</script>
