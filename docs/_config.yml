@@ -5,13 +5,16 @@ baseurl: "/gdextension-docs"
 url: "https://vorlac.github.io"
 title: GDExtension Technical Documentation
 description: Comprehensive technical documentation for Godot Engine's GDExtension C++ API
-lang: en
-logo: /assets/images/godot-logo.svg
 
-remote_theme: kitian616/jekyll-TeXt-theme@master
-text_skin: dark
-highlight_theme: tomorrow-night
+# Use minimal theme with GitHub-like styling
+theme: jekyll-theme-primer
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-github-metadata
 
+# Markdown processing
 markdown: kramdown
 kramdown:
   input: GFM
@@ -23,68 +26,27 @@ kramdown:
   toc_levels: 1..6
   smart_quotes: lsquo,rsquo,ldquo,rdquo
 
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-sitemap
-  - jemoji
-  - jekyll-remote-theme
-  - jekyll-paginate
+# Rouge syntax highlighter
+highlighter: rouge
+rouge:
+  dark_mode: true
 
-paginate: 10
+# Site structure
+permalink: pretty
 
+# Default layout
 defaults:
   - scope:
       path: ""
+      type: "pages"
     values:
-      layout: article
-      sidebar:
-        nav: docs
-      mathjax: false
-      mathjax_autoNumber: false
-      mermaid: true
-      chart: false
-      show_edit_on_github: false
-      show_subscribe: false
-      pageview: false
-      lightbox: true
-      aside:
-        toc: true
-      show_author_profile: false
-      show_title: false
-      show_tags: false
-      show_date: false
-      sharing: false
-      comment: false
-      license: false
-      footer: false
+      layout: "default"
 
-article_header:
-  theme: dark
-  background_color: '#203028'
-  background_image:
-    gradient: 'linear-gradient(135deg, rgba(34, 139, 87 , .4), rgba(139, 34, 139, .4))'
-
-data_dir: _data
-
-sass:
-  sass_dir: _sass
-  style: compressed
-
+# Exclude files
 exclude:
-  - CHANGELOG.md
-  - HOW_TO_RELEASE.md
   - Gemfile
   - Gemfile.lock
-  - LICENSE
-  - README.md
-  - screenshot.jpg
-  - docs
-  - test
-  - _drafts
-  - .travis.yml
-  - .git
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+  - node_modules
