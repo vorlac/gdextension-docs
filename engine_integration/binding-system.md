@@ -859,6 +859,7 @@ private:
 
 The binding generator (`binding_generator.py`) creates C++ bindings from Godot's API:
 
+{% raw %}
 ```python
 # Conceptual binding generation process
 def generate_class_binding(class_api):
@@ -888,6 +889,7 @@ def generate_class_binding(class_api):
     code.append("};")
     return "\n".join(code)
 ```
+{% endraw %}
 
 ### Generated Binding Example
 
