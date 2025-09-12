@@ -22,8 +22,18 @@ config:
         primaryBorderColor: '#3a3f47ff'
         mainBkg: '#262B33'
         secondBkg: '#425f5fff'
+        textColor: '#C1C4CA'
+        tertiaryBkg: '#4d4962ff'
         classText: '#C1C4CA'
         lineColor: '#978c72ff'
+        labelBoxBkgColor: '#425f5fff'
+        labelBoxBorderColor: '#8c9c81ff'
+        labelTextColor: '#C1C4CA'
+        mainContrastColor: '#FFFFFF'
+        noteColor: '#7a7253ff'
+        noteBkgColor: '#3a3f47ff'
+        noteTextColor: '#C1C4CA'
+        noteBorderColor: '#6a6f77ff'
 ---
 classDiagram
     class Object {

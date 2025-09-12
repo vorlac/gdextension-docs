@@ -132,7 +132,7 @@ config:
         darkMode: true
         background: '#262B33'
         primaryColor: '#2b4268ff'
-        primaryTextColor: '#FFFFFF'
+        primaryTextColor: '#C1C4CA'
         primaryBorderColor: '#779DC9'
         lineColor: '#C1C4CA'
         actorBkg: '#2b4268ff'
@@ -141,10 +141,17 @@ config:
         actorLineColor: '#779DC9'
         activationBorderColor: '#c7ac9bff'
         activationBkgColor: '#7a6253ff'
-        sequenceNumberColor: '#FFFFFF'
+        sequenceNumberColor: '#C1C4CA'
         noteBkgColor: '#3a3f47ff'
         noteTextColor: '#C1C4CA'
         noteBorderColor: '#6a6f77ff'
+        labelBoxBkgColor: '#425f5fff'
+        labelBoxBorderColor: '#8c9c81ff'
+        labelTextColor: '#C1C4CA'
+        loopTextColor: '#C1C4CA'
+        altTextColor: '#C1C4CA'
+        messageBkgColor: '#262B33'
+        messageTextColor: '#C1C4CA'
 ---
 sequenceDiagram
     participant OS as Operating System

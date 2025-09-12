@@ -27,10 +27,29 @@ config:
         primaryColor: '#2b4268ff'
         primaryTextColor: '#C1C4CAff'
         primaryBorderColor: '#6a6f77ff'
+        primaryLabelBkg: '#262B33'
+        secondaryColor: '#425f5fff'
+        secondaryBorderColor: '#8c9c81ff'
+        secondaryTextColor: '#C1C4CAff'
+        tertiaryColor: '#4d4962ff'
+        tertiaryBorderColor: '#8983a5ff'
+        tertiaryTextColor: '#eeeeee55'
         nodeTextColor: '#C1C4CA'
         defaultLinkColor: '#C1C4CA'
-        edgeLabelBackground: '#121212'
-        tertiaryTextColor: '#C1C4CA'
+        edgeLabelBackground: '#262B33'
+        edgeLabelBorderColor: '#C1C4CA'
+        labelTextColor: '#C1C4CA'
+        errorBkgColor: '#724848ff'
+        errorTextColor: '#C1C4CA'
+        flowchart:
+            curve: 'basis'
+            nodeSpacing: 50
+            rankSpacing: 50
+            subGraphTitleMargin:
+                top: 15
+                bottom: 15
+                left: 15
+                right: 15
 ---
 graph LR
     subgraph EXT["C++ Extension"]
@@ -48,7 +67,7 @@ graph LR
         F --> G[Engine Systems]
     end
 
-    linkStyle default stroke:#C1C4CAaa,stroke-width:2px,color:#C1C4CAaa
+    linkStyle default stroke:#C1C4CAaa,stroke-width:2px,color:#C1C4CA
 
     style A fill:#425f5fff,stroke:#8c9c81ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
     style B fill:#2b4268ff,stroke:#779DC9ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8

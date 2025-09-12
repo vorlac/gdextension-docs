@@ -20,13 +20,34 @@ config:
         clusterBkg: '#22272f62'
         clusterBorder: '#6a6f77ff'
         clusterTextColor: '#6a6f77ff'
-        lineColor: '#ffffff'
-        primaryTextColor: '#ffffff'
+        lineColor: '#C1C4CAAA'
+        background: '#262B33'
+        primaryColor: '#2b4268ff'
+        primaryTextColor: '#C1C4CAff'
         primaryBorderColor: '#6a6f77ff'
-        nodeTextColor: '#ffffff'
-        defaultLinkColor: '#ffffff'
-        edgeLabelBackground: '#121212'
-        tertiaryTextColor: '#C1C4CA'
+        primaryLabelBkg: '#262B33'
+        secondaryColor: '#425f5fff'
+        secondaryBorderColor: '#8c9c81ff'
+        secondaryTextColor: '#C1C4CAff'
+        tertiaryColor: '#4d4962ff'
+        tertiaryBorderColor: '#8983a5ff'
+        tertiaryTextColor: '#eeeeee55'
+        nodeTextColor: '#C1C4CA'
+        defaultLinkColor: '#C1C4CA'
+        edgeLabelBackground: '#262B33'
+        edgeLabelBorderColor: '#C1C4CA'
+        labelTextColor: '#C1C4CA'
+        errorBkgColor: '#724848ff'
+        errorTextColor: '#C1C4CA'
+        flowchart:
+            curve: 'basis'
+            nodeSpacing: 50
+            rankSpacing: 50
+            subGraphTitleMargin:
+                top: 15
+                bottom: 15
+                left: 15
+                right: 15
 ---
 flowchart LR
     subgraph GDSCRIPT["GDScript/Editor"]
@@ -48,14 +69,14 @@ flowchart LR
 
     linkStyle default stroke:#C1C4CAaa,stroke-width:2px,color:#C1C4CA
 
-    style A fill:#7a7253ff,stroke: #c7c19bff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style B fill:#7a6253ff,stroke: #c7ac9bff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style C fill: #2b4268ff,stroke: #779DC9ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style D fill:#4d4962ff,stroke: #8983a5ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style E fill:#3a3f47ff,stroke: #6a6f77ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style F fill: #2b4268ff,stroke: #779DC9ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style G fill:#425f5fff,stroke: #8c9c81ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
-    style H fill:#425f5fff,stroke: #8c9c81ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style A fill:#7a7253ff,stroke:#c7c19bff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style B fill:#7a6253ff,stroke:#c7ac9bff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style C fill:#2b4268ff,stroke:#779DC9ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style D fill:#4d4962ff,stroke:#8983a5ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style E fill:#3a3f47ff,stroke:#6a6f77ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style F fill:#2b4268ff,stroke:#779DC9ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style G fill:#425f5fff,stroke:#8c9c81ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
+    style H fill:#425f5fff,stroke:#8c9c81ff,stroke-width:2px,color:#C1C4CA,rx:8,ry:8
 ```
 
 ## What Are Bindings
@@ -186,10 +207,17 @@ config:
         actorLineColor: '#779DC9'
         activationBorderColor: '#c7ac9bff'
         activationBkgColor: '#7a6253ff'
-        sequenceNumberColor: '#FFFFFF'
+        sequenceNumberColor: '#C1C4CA'
         noteBkgColor: '#3a3f47ff'
         noteTextColor: '#C1C4CA'
         noteBorderColor: '#6a6f77ff'
+        labelBoxBkgColor: '#425f5fff'
+        labelBoxBorderColor: '#8c9c81ff'
+        labelTextColor: '#C1C4CA'
+        loopTextColor: '#C1C4CA'
+        altTextColor: '#C1C4CA'
+        messageBkgColor: '#262B33'
+        messageTextColor: '#C1C4CA'
 ---
 sequenceDiagram
     participant Init as Initialization

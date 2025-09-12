@@ -1,40 +1,83 @@
+<!-- Prism.js for syntax highlighting -->
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+
 <!-- Mermaid diagram support -->
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+<!-- Prism.js core and languages -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cmake.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-gdscript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markdown.min.js"></script>
+
+<!-- Prism.js plugins -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
+<style>
+  /* Custom styles for better integration with dark theme */
+  pre[class*="language-"] {
+    background: #1e1e1e;
+    border: 1px solid #3a3f47;
+    border-radius: 8px;
+    margin: 1.5em 0;
+  }
+  
+  code[class*="language-"] {
+    font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.95em;
+  }
+  
+  /* Line numbers styling */
+  .line-numbers .line-numbers-rows {
+    border-right: 1px solid #3a3f47;
+  }
+  
+  /* Toolbar styling */
+  div.code-toolbar > .toolbar {
+    opacity: 0.8;
+  }
+  
+  div.code-toolbar > .toolbar > .toolbar-item > button {
+    background: #2b4268;
+    color: #C1C4CA;
+    border: 1px solid #779DC9;
+    border-radius: 4px;
+    padding: 0.2em 0.5em;
+    font-size: 0.85em;
+  }
+  
+  div.code-toolbar > .toolbar > .toolbar-item > button:hover {
+    background: #425f5f;
+  }
+  
+  /* Mermaid container styling */
+  .mermaid {
+    text-align: center;
+    margin: 2em 0;
+  }
+</style>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
+    // Initialize Mermaid with minimal global config to let diagrams control their own themes
     mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'dark',
-      themeVariables: {
-        darkMode: true,
-        background: '#1a1a1a',
-        primaryColor: '#bb86fc',
-        primaryTextColor: '#ffffff',
-        primaryBorderColor: '#6200ee',
-        lineColor: '#bb86fc',
-        secondaryColor: '#03dac6',
-        tertiaryColor: '#3700b3',
-        mainBkg: '#1a1a1a',
-        secondBkg: '#2a2a2a',
-        tertiaryTextColor: '#ffffff',
-        nodeTextColor: '#ffffff',
-        textColor: '#ffffff',
-        titleColor: '#ffffff',
-        labelTextColor: '#ffffff',
-        actorTextColor: '#ffffff',
-        sectionTextColor: '#ffffff',
-        fillType0: '#8b8b8b',
-        fillType1: '#7a7a7a',
-        fillType2: '#6a6a6a',
-        fillType3: '#5a5a5a',
-        fillType4: '#4a4a4a',
-        fillType5: '#3a3a3a',
-        fillType6: '#2a2a2a',
-        fillType7: '#1a1a1a'
-      }
+      startOnLoad: false,
+      securityLevel: 'loose', // Allow inline styles from diagrams
+      theme: 'base' // Use base theme to allow custom theming
     });
     
-    // Find all code blocks with mermaid language
+    // Process Mermaid diagrams
     document.querySelectorAll('pre code.language-mermaid').forEach(function(block) {
       // Get the text content
       var graphDefinition = block.textContent;
@@ -51,5 +94,20 @@
     
     // Re-render mermaid diagrams
     mermaid.init();
+    
+    // Add line numbers class to code blocks if not present
+    document.querySelectorAll('pre code').forEach(function(block) {
+      if (!block.classList.contains('language-mermaid')) {
+        var pre = block.parentElement;
+        if (!pre.classList.contains('line-numbers')) {
+          pre.classList.add('line-numbers');
+        }
+      }
+    });
+    
+    // Re-highlight with Prism
+    if (typeof Prism !== 'undefined') {
+      Prism.highlightAll();
+    }
   });
 </script>
