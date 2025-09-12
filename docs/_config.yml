@@ -76,7 +76,10 @@ exclude:
   - screenshot.jpg
   - docs
   - test
-  - _posts
   - _drafts
   - .travis.yml
   - .git
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
