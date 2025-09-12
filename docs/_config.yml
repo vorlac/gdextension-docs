@@ -18,7 +18,10 @@ plugins:
 markdown: kramdown
 kramdown:
   input: GFM
-  syntax_highlighter: none  # Disable Rouge, we're using Prism.js
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    default_lang: cpp
   hard_wrap: false
   auto_ids: true
   footnote_nr: 1
@@ -26,8 +29,8 @@ kramdown:
   toc_levels: 1..6
   smart_quotes: lsquo,rsquo,ldquo,rdquo
 
-# Disable Rouge since we're using Prism.js
-highlighter: none
+# Rouge syntax highlighter
+highlighter: rouge
 
 # Site structure
 permalink: pretty
