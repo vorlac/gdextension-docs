@@ -1,3 +1,7 @@
+# AI Generation
+
+The most important thing to know about about these docs and truly everything contained in this repo, other than these few sentences you're resding right now, was automatically generated using the claude 4.2 opus LLM paired with [this prompt](./resources/prompt.md). A good rule of thumb for something like this (espeially before it's gotten proper human review) is to never assume anything written in these documentation pages is fully correct without validating it yourself first.
+
 # GDExtension (godot-cpp) Developer Documentation
 
 This comprehensive technical documentation provides deep insights into godot-cpp, the C++ bindings for Godot Engine's GDExtension API. The documentation covers everything from getting started to advanced internal implementation details.
